@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: personality_mongodb
+    ports:
+      - "27017:27017"
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mongod --replSet rs0 --bind_ip_all &
+        MONGOD_PID=$$!
+        until mongosh --eval "rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'localhost:27017'}]})" 2>/dev/null; do
+          sleep 1
+        done
+        wait $$MONGOD_PID
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "rs.status().ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mongodb_data:

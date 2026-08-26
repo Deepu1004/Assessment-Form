@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model ResultType {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  slug         String   @unique
+  description  String
+  minimumScore Int
+  maximumScore Int
+  displayOrder Int
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  results AssessmentResult[]
+}
+
+model Question {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  questionText String
+  displayOrder Int
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  options AnswerOption[]
+  answers AssessmentAnswer[]
+}
+
+model AnswerOption {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  questionId   String   @db.ObjectId
+  question     Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  optionText   String
+  optionKey    String
+  score        Int      @default(1)
+  displayOrder Int
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  answers AssessmentAnswer[]
+}
+
+model AssessmentSession {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String    @unique
+  startedAt    DateTime  @default(now())
+  completedAt  DateTime?
+  status       String    @default("IN_PROGRESS")
+  finalScore   Int?
+
+  answers AssessmentAnswer[]
+  result  AssessmentResult?
+}
+
+model AssessmentAnswer {
+  id                String            @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId         String            @db.ObjectId
+  session           AssessmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  questionId        String            @db.ObjectId
+  question          Question          @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answerOptionId    String            @db.ObjectId
+  answerOption      AnswerOption      @relation(fields: [answerOptionId], references: [id], onDelete: Cascade)
+  scoreAtSubmission Int
+  createdAt         DateTime          @default(now())
+
+  @@unique([sessionId, questionId])
+}
+
+model AssessmentResult {
+  id           String            @id @default(auto()) @map("_id") @db.ObjectId
+  sessionId    String            @unique @db.ObjectId
+  session      AssessmentSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  resultTypeId String            @db.ObjectId
+  resultType   ResultType        @relation(fields: [resultTypeId], references: [id], onDelete: Cascade)
+  finalScore   Int
+  createdAt    DateTime          @default(now())
+}
