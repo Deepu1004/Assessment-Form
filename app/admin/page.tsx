@@ -80,10 +80,10 @@ export default function AdminDashboardOverviewPage() {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight">
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
             Analytics Overview
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 text-sm mt-1">
             Real-time single-score assessment responses and score metrics.
           </p>
         </div>
@@ -91,14 +91,14 @@ export default function AdminDashboardOverviewPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={fetchOverview}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 text-slate-300 border border-slate-700 hover:bg-slate-700 hover:text-white text-sm font-semibold transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900 text-sm font-semibold transition-colors shadow-sm"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-4 h-4 text-slate-500" />
             Refresh
           </button>
           <Link
             href="/admin/builder"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm font-bold shadow-md hover:opacity-90 transition-all"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#004bbf] hover:bg-[#003993] text-white text-sm font-bold shadow-md transition-all"
           >
             Open Assessment Builder
           </Link>
@@ -106,57 +106,57 @@ export default function AdminDashboardOverviewPage() {
       </div>
 
       {error ? (
-        <div className="p-6 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-center space-y-3">
-          <AlertCircle className="w-8 h-8 mx-auto text-rose-400" />
+        <div className="p-6 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-center space-y-3">
+          <AlertCircle className="w-8 h-8 mx-auto text-rose-500" />
           <p>{error}</p>
         </div>
       ) : overview ? (
         <>
           {/* Key Metrics Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border">
+            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-white">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Total Responses
                 </span>
-                <Users className="w-4 h-4 text-indigo-400" />
+                <Users className="w-4 h-4 text-[#004bbf]" />
               </div>
-              <p className="text-3xl font-extrabold text-white">{overview.totalSubmissions}</p>
+              <p className="text-3xl font-extrabold text-slate-900">{overview.totalSubmissions}</p>
               <p className="text-xs text-slate-500">Persisted in MongoDB</p>
             </div>
 
-            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border">
+            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-white">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Average Score
                 </span>
-                <Calculator className="w-4 h-4 text-emerald-400" />
+                <Calculator className="w-4 h-4 text-emerald-600" />
               </div>
-              <p className="text-3xl font-extrabold text-emerald-400">{overview.averageScore}</p>
+              <p className="text-3xl font-extrabold text-emerald-600">{overview.averageScore}</p>
               <p className="text-xs text-slate-500">Cumulative average score</p>
             </div>
 
-            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border">
+            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-white">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Score Range
                 </span>
-                <BarChart3 className="w-4 h-4 text-purple-400" />
+                <BarChart3 className="w-4 h-4 text-purple-600" />
               </div>
-              <p className="text-2xl font-bold text-white font-mono">
+              <p className="text-2xl font-bold text-slate-900 font-mono">
                 {overview.minScore} - {overview.maxScore} pts
               </p>
               <p className="text-xs text-slate-500">Min to Max score</p>
             </div>
 
-            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border">
+            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-white">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Top Result
                 </span>
-                <Trophy className="w-4 h-4 text-amber-400" />
+                <Trophy className="w-4 h-4 text-amber-500" />
               </div>
-              <p className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-indigo-300 uppercase truncate">
+              <p className="text-xl font-bold text-[#004bbf] uppercase truncate">
                 {[...overview.distribution].sort((a, b) => b.count - a.count)[0]?.name || "N/A"}
               </p>
               <p className="text-xs text-slate-500">Highest frequency archetype</p>
@@ -164,9 +164,9 @@ export default function AdminDashboardOverviewPage() {
           </div>
 
           {/* Distribution */}
-          <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <BarChart3 className="w-5 h-5 text-indigo-400" />
+          <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-6 bg-white border border-slate-200 shadow-sm">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-[#004bbf]" />
               Result Frequency Distribution
             </h2>
 
@@ -181,14 +181,14 @@ export default function AdminDashboardOverviewPage() {
                 return (
                   <div key={item.slug} className="space-y-1.5">
                     <div className="flex justify-between items-center text-sm font-semibold">
-                      <span className="text-slate-200">{item.name}</span>
-                      <span className="text-slate-400 font-mono text-xs">
+                      <span className="text-slate-800">{item.name}</span>
+                      <span className="text-slate-500 font-mono text-xs">
                         {item.count} responses ({percentage}%)
                       </span>
                     </div>
-                    <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden p-0.5 border border-slate-700/50">
+                    <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200">
                       <div
-                        className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+                        className="h-full bg-[#004bbf] rounded-full transition-all duration-500"
                         style={{ width: `${fillPercentage}%` }}
                       />
                     </div>
@@ -199,20 +199,20 @@ export default function AdminDashboardOverviewPage() {
           </div>
 
           {/* Recent Submissions */}
-          <div className="glass-panel p-6 rounded-2xl space-y-6 overflow-hidden">
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              <Clock className="w-5 h-5 text-indigo-400" />
+          <div className="glass-panel p-6 rounded-2xl space-y-6 overflow-hidden bg-white border border-slate-200 shadow-sm">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-[#004bbf]" />
               Recent Submissions
             </h2>
 
             {overview.recentSubmissions.length === 0 ? (
-              <p className="text-slate-400 text-sm text-center py-8">
+              <p className="text-slate-500 text-sm text-center py-8">
                 No submissions recorded yet. Take the assessment to test persistence!
               </p>
             ) : (
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm text-slate-300">
-                  <thead className="text-xs uppercase bg-slate-900/90 text-slate-400 border-b border-slate-800">
+                <table className="w-full text-left text-sm text-slate-700">
+                  <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
                     <tr>
                       <th className="px-4 py-3">Session Token</th>
                       <th className="px-4 py-3">Result</th>
@@ -221,25 +221,25 @@ export default function AdminDashboardOverviewPage() {
                       <th className="px-4 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60 font-medium">
+                  <tbody className="divide-y divide-slate-200 font-medium">
                     {overview.recentSubmissions.map((sub) => (
-                      <tr key={sub.id} className="hover:bg-slate-800/40 transition-colors">
-                        <td className="px-4 py-3 font-mono text-xs text-indigo-300">
+                      <tr key={sub.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-4 py-3 font-mono text-xs text-[#004bbf]">
                           {sub.sessionToken.substring(0, 16)}...
                         </td>
-                        <td className="px-4 py-3 font-bold text-white uppercase">
+                        <td className="px-4 py-3 font-bold text-slate-900 uppercase">
                           {sub.resultType}
                         </td>
-                        <td className="px-4 py-3 font-mono font-bold text-emerald-400">
+                        <td className="px-4 py-3 font-mono font-bold text-emerald-600">
                           {sub.finalScore} pts
                         </td>
-                        <td className="px-4 py-3 text-xs text-slate-400">
+                        <td className="px-4 py-3 text-xs text-slate-500">
                           {new Date(sub.completedAt).toLocaleString()}
                         </td>
                         <td className="px-4 py-3 text-right">
                           <button
                             onClick={() => handleOpenDetail(sub.id)}
-                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-500/30 text-xs font-semibold transition-colors"
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 text-[#004bbf] hover:bg-[#004bbf] hover:text-white border border-slate-200 text-xs font-semibold transition-colors"
                           >
                             <span>Inspect</span>
                             <ExternalLink className="w-3 h-3" />

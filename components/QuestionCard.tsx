@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import { QuestionDTO, AnswerOptionDTO } from "@/types/assessment";
-import { CheckCircle2 } from "lucide-react";
 
 interface QuestionCardProps {
   question: QuestionDTO;
@@ -15,7 +14,7 @@ export function QuestionCard({
   selectedOptionId,
   onSelectOption,
 }: QuestionCardProps) {
-  // Add keyboard shortcuts (A-E or 1-5)
+  // Add keyboard shortcuts (A-D or 1-4)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const key = e.key.toUpperCase();
@@ -33,19 +32,21 @@ export function QuestionCard({
   }, [question, onSelectOption]);
 
   return (
-    <div className="space-y-6">
-      {/* Question Header */}
-      <div>
-        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-3">
-          Question #{question.displayOrder}
-        </span>
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-100 leading-snug tracking-tight">
-          {question.questionText}
-        </h2>
+    <div className="space-y-6 text-left">
+      {/* Question Number Badge */}
+      <div className="flex items-center gap-2">
+        <div className="w-7 h-7 rounded bg-[#004bbf] text-white flex items-center justify-center font-bold text-sm shadow-sm">
+          {question.displayOrder}
+        </div>
       </div>
 
-      {/* Answer Options */}
-      <div className="space-y-3">
+      {/* Scenario Text */}
+      <h2 className="text-base sm:text-lg lg:text-xl font-medium text-slate-800 leading-snug">
+        {question.questionText}*
+      </h2>
+
+      {/* Answer Options matching Image 2 */}
+      <div className="space-y-3 pt-2">
         {question.options.map((option: AnswerOptionDTO, idx) => {
           const isSelected = selectedOptionId === option.id;
 
@@ -54,34 +55,24 @@ export function QuestionCard({
               key={option.id}
               type="button"
               onClick={() => onSelectOption(option.id)}
-              className={`w-full text-left p-4 rounded-xl border transition-all duration-200 flex items-center justify-between group ${
+              className={`w-full text-left p-3.5 sm:p-4 rounded-xl border transition-all duration-150 flex items-center gap-3.5 group ${
                 isSelected
-                  ? "bg-indigo-600/15 border-indigo-500 text-white shadow-lg shadow-indigo-500/10 ring-1 ring-indigo-500"
-                  : "bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700 hover:bg-slate-800/60 hover:text-white"
+                  ? "bg-[#eaf2ff] border-[#004bbf] ring-1 ring-[#004bbf]"
+                  : "bg-[#f4f7fc] border-[#e2e8f0] hover:bg-[#eef4ff] hover:border-[#cbd5e1]"
               }`}
             >
-              <div className="flex items-center gap-3.5">
-                <div
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center font-bold text-sm transition-colors ${
-                    isSelected
-                      ? "bg-indigo-500 text-white"
-                      : "bg-slate-800 text-slate-400 group-hover:bg-slate-700 group-hover:text-slate-200"
-                  }`}
-                >
-                  {option.optionKey || String.fromCharCode(65 + idx)}
-                </div>
-                <span className="font-medium text-sm sm:text-base">
-                  {option.optionText}
-                </span>
+              <div
+                className={`w-6 h-6 rounded-md border flex items-center justify-center font-bold text-xs sm:text-sm shrink-0 transition-colors ${
+                  isSelected
+                    ? "bg-[#004bbf] text-white border-[#004bbf]"
+                    : "bg-white text-[#004bbf] border-[#004bbf]/40"
+                }`}
+              >
+                {option.optionKey || String.fromCharCode(65 + idx)}
               </div>
-
-              <div className="flex items-center gap-2">
-                {isSelected ? (
-                  <CheckCircle2 className="w-5 h-5 text-indigo-400 animate-in fade-in zoom-in duration-200" />
-                ) : (
-                  <div className="w-5 h-5 rounded-full border border-slate-700 group-hover:border-slate-500 transition-colors" />
-                )}
-              </div>
+              <span className={`text-sm sm:text-base font-medium leading-tight ${isSelected ? "text-[#003993] font-semibold" : "text-[#003993]/90"}`}>
+                {option.optionText}
+              </span>
             </button>
           );
         })}

@@ -110,11 +110,11 @@ export default function AdminScoringMatrixPage() {
       {/* Top Header with Single Save All Button */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
-            <Grid3X3 className="w-7 h-7 text-indigo-400" />
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight flex items-center gap-3">
+            <Grid3X3 className="w-7 h-7 text-[#004bbf]" />
             Scoring Matrix View
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-slate-600 text-sm mt-1">
             Edit score values across options freely and save all changes at once.
           </p>
         </div>
@@ -122,7 +122,7 @@ export default function AdminScoringMatrixPage() {
         <button
           onClick={handleSaveAll}
           disabled={saving}
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20 active:scale-95 shrink-0"
+          className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 shrink-0"
         >
           {saving ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -136,24 +136,24 @@ export default function AdminScoringMatrixPage() {
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm flex items-center gap-2">
-          <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-2">
+          <AlertCircle className="w-5 h-5 text-rose-500 shrink-0" />
           <span>{error}</span>
         </div>
       )}
 
       {successNotice && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm flex items-center gap-2">
-          <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
+        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
           <span>{successNotice}</span>
         </div>
       )}
 
       {/* Matrix Table */}
-      <div className="glass-panel p-6 rounded-2xl border space-y-6 overflow-hidden">
+      <div className="glass-panel p-6 rounded-2xl border border-slate-200 bg-white space-y-6 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-slate-300">
-            <thead className="text-xs uppercase bg-slate-900/90 text-slate-400 border-b border-slate-800">
+          <table className="w-full text-left text-sm text-slate-700">
+            <thead className="text-xs uppercase bg-slate-50 text-slate-500 border-b border-slate-200">
               <tr>
                 <th className="px-4 py-3 min-w-[280px]">Question</th>
                 {optionKeys.map((key) => (
@@ -163,11 +163,11 @@ export default function AdminScoringMatrixPage() {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60 font-medium">
+            <tbody className="divide-y divide-slate-200 font-medium">
               {matrix.map((q) => (
-                <tr key={q.questionId} className="hover:bg-slate-800/30 transition-colors">
+                <tr key={q.questionId} className="hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-4 space-y-1">
-                    <p className="font-bold text-white text-sm">
+                    <p className="font-bold text-slate-900 text-sm">
                       Q{q.displayOrder}. {q.questionText}
                     </p>
                   </td>
@@ -176,7 +176,7 @@ export default function AdminScoringMatrixPage() {
                     const opt = q.options.find((o) => o.optionKey === key);
                     if (!opt) {
                       return (
-                        <td key={key} className="px-4 py-4 text-center text-slate-600">
+                        <td key={key} className="px-4 py-4 text-center text-slate-400">
                           —
                         </td>
                       );
@@ -195,7 +195,7 @@ export default function AdminScoringMatrixPage() {
                                 Number(e.target.value)
                               )
                             }
-                            className="w-16 px-2 py-2 rounded-xl bg-slate-900 border border-slate-700 text-emerald-400 font-mono font-extrabold text-center text-base focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
+                            className="w-16 px-2 py-2 rounded-xl bg-slate-50 border border-slate-300 text-emerald-700 font-mono font-extrabold text-center text-base focus:outline-none focus:border-[#004bbf] focus:ring-1 focus:ring-[#004bbf] transition-all"
                           />
                         </div>
                       </td>
@@ -208,11 +208,11 @@ export default function AdminScoringMatrixPage() {
         </div>
 
         {/* Bottom Save Bar */}
-        <div className="pt-4 border-t border-slate-800/80 flex justify-end">
+        <div className="pt-4 border-t border-slate-200 flex justify-end">
           <button
             onClick={handleSaveAll}
             disabled={saving}
-            className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md"
+            className="px-6 py-2.5 rounded-xl bg-[#004bbf] hover:bg-[#003993] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md"
           >
             {saving ? (
               <Loader2 className="w-4 h-4 animate-spin" />

@@ -13,48 +13,48 @@ async function main() {
   await prisma.question.deleteMany();
   await prisma.resultType.deleteMany();
 
-  // 1. Seed Result Types with Score Ranges
+  // 1. Seed Result Types with Score Ranges (Research Integrity Personalities)
   const resultTypesData = [
     {
-      name: "Explorer",
-      slug: "explorer",
-      description: "Curious, adaptable, and energized by discovering new possibilities.",
+      name: "Integrity Novice",
+      slug: "integrity-novice",
+      description: "Developing awareness of research ethics. You benefit from foundational guidance on AI tools, transparency, and data handling.",
       minimumScore: 5,
       maximumScore: 9,
       displayOrder: 1,
       active: true,
     },
     {
-      name: "Builder",
-      slug: "builder",
-      description: "Practical, creative, and focused on turning ideas into something real.",
+      name: "Pragmatic Researcher",
+      slug: "pragmatic-researcher",
+      description: "Result-focused with emerging integrity standards. Encouraged to prioritize deep validation, attribution, and formal reviewer conflict checks.",
       minimumScore: 10,
       maximumScore: 13,
       displayOrder: 2,
       active: true,
     },
     {
-      name: "Analyst",
-      slug: "analyst",
-      description: "Logical, methodical, and driven by understanding evidence and systems.",
+      name: "Conscientious Scholar",
+      slug: "conscientious-scholar",
+      description: "Strong commitment to transparent data reporting, fair authorship, and balanced public communication of research limitations.",
       minimumScore: 14,
       maximumScore: 17,
       displayOrder: 3,
       active: true,
     },
     {
-      name: "Connector",
-      slug: "connector",
-      description: "Collaborative, empathetic, and focused on people and shared outcomes.",
+      name: "Integrity Ambassador",
+      slug: "integrity-ambassador",
+      description: "Proactive advocate for research transparency, ethical AI usage, collaborative authorship agreements, and rigorous peer review.",
       minimumScore: 18,
       maximumScore: 21,
       displayOrder: 4,
       active: true,
     },
     {
-      name: "Leader",
-      slug: "leader",
-      description: "Decisive, goal-oriented, and comfortable taking ownership.",
+      name: "Research Ethics Champion",
+      slug: "research-ethics-champion",
+      description: "Highest standard of research integrity. Role model in validating AI models, full data transparency, ethical peer review, and responsible science communication.",
       minimumScore: 22,
       maximumScore: 25,
       displayOrder: 5,
@@ -66,61 +66,56 @@ async function main() {
     await prisma.resultType.create({ data: rt });
   }
 
-  // 2. Seed Questions & Options with Single Scores
+  // 2. Seed Scenario-Based Questions & Options from Taylor & Francis Research Integrity Brief
   const questionsData = [
     {
       displayOrder: 1,
-      questionText: "When facing a new problem, what do you usually do first?",
+      questionText: "Theme 1: Responsible Use of AI & Research Transparency — You are analyzing your research results using an AI tool. The tool produces a result that supports your hypothesis. What would you do?",
       options: [
-        { optionKey: "A", optionText: "Explore different possibilities", score: 1, displayOrder: 1 },
-        { optionKey: "B", optionText: "Start building a solution", score: 2, displayOrder: 2 },
-        { optionKey: "C", optionText: "Analyze the facts", score: 3, displayOrder: 3 },
-        { optionKey: "D", optionText: "Ask people for perspectives", score: 4, displayOrder: 4 },
-        { optionKey: "E", optionText: "Take charge and decide", score: 5, displayOrder: 5 },
+        { optionKey: "A", optionText: "Use it - the results look reliable.", score: 1, displayOrder: 1 },
+        { optionKey: "B", optionText: "Avoid AI altogether.", score: 2, displayOrder: 2 },
+        { optionKey: "C", optionText: "Use it but mention that AI was involved.", score: 4, displayOrder: 3 },
+        { optionKey: "D", optionText: "Validate the results, investigate how the tool works, and assess its limitations.", score: 5, displayOrder: 4 },
       ],
     },
     {
       displayOrder: 2,
-      questionText: "Which environment suits you best?",
+      questionText: "Theme 2: Research Data Integrity & Transparency — While reviewing your dataset, you discover unexpected observations/outliers. Removing them would make your findings much clearer. What would you do?",
       options: [
-        { optionKey: "A", optionText: "A place with constant discovery", score: 1, displayOrder: 1 },
-        { optionKey: "B", optionText: "A place where you can create", score: 2, displayOrder: 2 },
-        { optionKey: "C", optionText: "A place with clear data and structure", score: 3, displayOrder: 3 },
-        { optionKey: "D", optionText: "A collaborative team", score: 4, displayOrder: 4 },
-        { optionKey: "E", optionText: "A place where you can lead", score: 5, displayOrder: 5 },
+        { optionKey: "A", optionText: "Remove them because they're probably anomalies.", score: 1, displayOrder: 1 },
+        { optionKey: "B", optionText: "Keep them out of the main analysis, but mention them in the discussion if necessary.", score: 2, displayOrder: 2 },
+        { optionKey: "C", optionText: "Ask a colleague whether they think the observations should be removed.", score: 3, displayOrder: 3 },
+        { optionKey: "D", optionText: "Keep them, investigate why they're different, and ensure you transparently report how you handled them.", score: 5, displayOrder: 4 },
       ],
     },
     {
       displayOrder: 3,
-      questionText: "What motivates you most?",
+      questionText: "Theme 3: Authorship Ethics — You're preparing a manuscript. One senior researcher made an important contribution early in the project but has had little involvement since. Another researcher did substantial work analyzing data and drafting the manuscript. How would you approach authorship?",
       options: [
-        { optionKey: "A", optionText: "Learning something new", score: 1, displayOrder: 1 },
-        { optionKey: "B", optionText: "Making something useful", score: 2, displayOrder: 2 },
-        { optionKey: "C", optionText: "Understanding how things work", score: 3, displayOrder: 3 },
-        { optionKey: "D", optionText: "Helping people succeed", score: 4, displayOrder: 4 },
-        { optionKey: "E", optionText: "Achieving a clear goal", score: 5, displayOrder: 5 },
+        { optionKey: "A", optionText: "Give the senior researcher first authorship because of their position.", score: 1, displayOrder: 1 },
+        { optionKey: "B", optionText: "Let the most senior researcher decide.", score: 2, displayOrder: 2 },
+        { optionKey: "C", optionText: "Include everyone who was involved in the project, regardless of contribution.", score: 3, displayOrder: 3 },
+        { optionKey: "D", optionText: "Discuss authorship transparently based on contributions and agree responsibilities with the team.", score: 5, displayOrder: 4 },
       ],
     },
     {
       displayOrder: 4,
-      questionText: "How do you usually make decisions?",
+      questionText: "Theme 4: Peer Review & Conflicts of Interest — You've been invited to review a manuscript on a topic very close to your own unpublished research. You could potentially benefit from seeing their approach before publishing your own work. What would you do?",
       options: [
-        { optionKey: "A", optionText: "Try and learn", score: 1, displayOrder: 1 },
-        { optionKey: "B", optionText: "Think about practical execution", score: 2, displayOrder: 2 },
-        { optionKey: "C", optionText: "Compare evidence", score: 3, displayOrder: 3 },
-        { optionKey: "D", optionText: "Discuss with others", score: 4, displayOrder: 4 },
-        { optionKey: "E", optionText: "Choose a direction and act", score: 5, displayOrder: 5 },
+        { optionKey: "A", optionText: "Review it quickly and make sure you publish your own work first.", score: 1, displayOrder: 1 },
+        { optionKey: "B", optionText: "Accept the review - it could help you understand the field better.", score: 2, displayOrder: 2 },
+        { optionKey: "C", optionText: "Accept, but avoid using their ideas directly in your unpublished work.", score: 3, displayOrder: 3 },
+        { optionKey: "D", optionText: "Consider the conflict of interest and, if appropriate, inform the editor first, rather than compromising the review process.", score: 5, displayOrder: 4 },
       ],
     },
     {
       displayOrder: 5,
-      questionText: "What would others most likely say about you?",
+      questionText: "Theme 5: Sharing Findings & Public Communication — Your research produced an exciting finding that could attract significant attention on social media. However, the study has limitations and could easily be misunderstood without context. What would you do?",
       options: [
-        { optionKey: "A", optionText: "Curious", score: 1, displayOrder: 1 },
-        { optionKey: "B", optionText: "Resourceful", score: 2, displayOrder: 2 },
-        { optionKey: "C", optionText: "Logical", score: 3, displayOrder: 3 },
-        { optionKey: "D", optionText: "Supportive", score: 4, displayOrder: 4 },
-        { optionKey: "E", optionText: "Decisive", score: 5, displayOrder: 5 },
+        { optionKey: "A", optionText: "Share the most exciting finding first - the full paper contains the limitations.", score: 1, displayOrder: 1 },
+        { optionKey: "B", optionText: "Share it but leave the interpretation to the audience.", score: 2, displayOrder: 2 },
+        { optionKey: "C", optionText: "Avoid sharing the research publicly until someone else confirms it.", score: 3, displayOrder: 3 },
+        { optionKey: "D", optionText: "Communicate the finding clearly while explaining the relevant limitations and context.", score: 5, displayOrder: 4 },
       ],
     },
   ];
@@ -148,8 +143,9 @@ async function main() {
     }
   }
 
-  console.log("✅ Model A seed completed successfully!");
-  console.log(`- Created ${resultTypesData.length} Result Types (Ranges 5..25)`);
+  console.log("✅ Taylor & Francis Research Integrity seed completed successfully!");
+  console.log(`- Created ${resultTypesData.length} Integrity Personalities (Scores 5..25)`);
+  console.log(`- Created ${questionsData.length} Research Integrity Dilemma Scenarios`);
   console.log(`- Created ${questionsData.length} Questions with 5 Options each (Scores 1..5)`);
 }
 

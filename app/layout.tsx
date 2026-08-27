@@ -16,14 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} dark`}>
-      <body className="antialiased bg-[#090d16] text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white relative">
-        {/* Background ambient lighting */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-          <div className="absolute -top-[20%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-indigo-950/30 blur-[120px]" />
-          <div className="absolute top-[30%] -right-[10%] w-[45vw] h-[45vw] rounded-full bg-violet-950/25 blur-[140px]" />
-          <div className="absolute -bottom-[20%] left-[20%] w-[50vw] h-[50vw] rounded-full bg-blue-950/20 blur-[130px]" />
-        </div>
+    <html lang="en" className={`${inter.variable}`}>
+      <body className="antialiased bg-[#eef3f9] text-slate-900 min-h-screen flex flex-col selection:bg-[#004bbf] selection:text-white relative">
+        {/* Soft light background container */}
+        <div className="fixed inset-0 pointer-events-none z-0 bg-gradient-to-br from-[#f8fafc] via-[#edf2f8] to-[#e2e8f0]" />
 
         {/* Content container */}
         <div className="relative z-10 flex-1 flex flex-col">{children}</div>

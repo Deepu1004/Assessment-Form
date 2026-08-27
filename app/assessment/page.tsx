@@ -132,133 +132,119 @@ export default function AssessmentPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:py-12 max-w-3xl mx-auto w-full">
-      <div className="w-full space-y-8">
-        {/* Progress Bar Header */}
-        <ProgressBar
-          currentStep={currentStep}
-          totalSteps={totalQuestions}
-        />
+    <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 lg:p-12 min-h-screen">
+      {/* Expanded Form Container */}
+      <div className="w-full max-w-md sm:max-w-xl lg:max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col min-h-[580px] sm:min-h-[640px] p-6 sm:p-10 lg:p-12 justify-between relative transition-all">
+        
+        {/* Step 1 to N: Question Display */}
+        {!isReviewStep && currentQuestion && (
+          <QuestionCard
+            question={currentQuestion}
+            selectedOptionId={currentSelectedOptionId}
+            onSelectOption={handleSelectOption}
+          />
+        )}
 
-        {/* Main Card */}
-        <div className="glass-panel p-6 sm:p-8 rounded-2xl space-y-8 shadow-2xl relative">
-          {/* Step 1 to N: Question Display */}
-          {!isReviewStep && currentQuestion && (
-            <QuestionCard
-              question={currentQuestion}
-              selectedOptionId={currentSelectedOptionId}
-              onSelectOption={handleSelectOption}
-            />
-          )}
-
-          {/* Step N+1: Review Answers Page */}
-          {isReviewStep && (
-            <div className="space-y-6">
-              <div>
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-2">
-                  Final Step
-                </span>
-                <h2 className="text-2xl font-bold text-white tracking-tight">
-                  Review Your Answers
-                </h2>
-                <p className="text-slate-400 text-sm">
-                  Check your choices before generating your personality archetype result.
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {questions.map((q, idx) => {
-                  const selectedOptId = selectedAnswers[q.id];
-                  const selectedOpt = q.options.find((o) => o.id === selectedOptId);
-
-                  return (
-                    <div
-                      key={q.id}
-                      className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between gap-4"
-                    >
-                      <div className="space-y-1">
-                        <span className="text-xs font-bold text-indigo-400 uppercase tracking-wider">
-                          Question {idx + 1}
-                        </span>
-                        <p className="text-sm font-semibold text-slate-200">{q.questionText}</p>
-                        <p className="text-sm text-indigo-300 font-medium">
-                          → {selectedOpt ? `${selectedOpt.optionKey}. ${selectedOpt.optionText}` : "No answer selected"}
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={() => setCurrentStep(idx + 1)}
-                        className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 transition-colors flex items-center gap-1.5 text-xs font-semibold"
-                        title="Change Answer"
-                      >
-                        <Edit2 className="w-3.5 h-3.5" />
-                        Edit
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {submitError && (
-                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-sm flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 shrink-0" />
-                  <span>{submitError}</span>
-                </div>
-              )}
+        {/* Step N+1: Review Answers Page */}
+        {isReviewStep && (
+          <div className="space-y-4 text-left">
+            <div>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-bold bg-emerald-100 text-emerald-800 mb-2">
+                Final Step
+              </span>
+              <h2 className="text-lg font-bold text-slate-800 tracking-tight">
+                Review Your Answers
+              </h2>
+              <p className="text-slate-500 text-xs">
+                Check your choices before calculating your Research Integrity score.
+              </p>
             </div>
-          )}
 
-          {/* Navigation Controls */}
-          <div className="flex items-center justify-between pt-6 border-t border-slate-800">
+            <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+              {questions.map((q, idx) => {
+                const selectedOptId = selectedAnswers[q.id];
+                const selectedOpt = q.options.find((o) => o.id === selectedOptId);
+
+                return (
+                  <div
+                    key={q.id}
+                    className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-left"
+                  >
+                    <div className="space-y-0.5 min-w-0">
+                      <span className="text-[10px] font-bold text-[#004bbf] uppercase">
+                        Question {idx + 1}
+                      </span>
+                      <p className="text-xs font-medium text-slate-700 truncate">{q.questionText}</p>
+                      <p className="text-xs text-[#003993] font-semibold truncate">
+                        → {selectedOpt ? `${selectedOpt.optionKey}. ${selectedOpt.optionText}` : "No answer"}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => setCurrentStep(idx + 1)}
+                      className="p-1.5 rounded bg-white text-slate-600 border border-slate-300 hover:text-[#004bbf] hover:border-[#004bbf] transition-colors flex items-center gap-1 text-[11px] font-semibold shrink-0"
+                    >
+                      <Edit2 className="w-3 h-3" />
+                      Edit
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            {submitError && (
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{submitError}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Bottom OK / Next Button matching Image 2 */}
+        <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+          {currentStep > 1 && (
             <button
               type="button"
               onClick={handleBack}
-              disabled={currentStep === 1 || submitting}
-              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${
-                currentStep === 1 || submitting
-                  ? "opacity-40 cursor-not-allowed text-slate-600 bg-slate-900 border border-slate-800"
-                  : "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white border border-slate-700"
-              }`}
+              disabled={submitting}
+              className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 border border-slate-300 rounded-md transition-colors"
             >
-              <ArrowLeft className="w-4 h-4" />
               Back
             </button>
+          )}
 
-            {!isReviewStep ? (
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={!currentSelectedOptionId}
-                className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all ${
-                  !currentSelectedOptionId
-                    ? "opacity-50 cursor-not-allowed bg-slate-800 text-slate-500 border border-slate-700/50"
-                    : "bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/20 hover:from-indigo-500 hover:to-purple-500 active:scale-95"
-                }`}
-              >
-                <span>{currentStep === totalQuestions ? "Review Answers" : "Next"}</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={submitting}
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 active:scale-95 transition-all disabled:opacity-50"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Calculating Scores...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-4 h-4" />
-                    <span>Submit Assessment</span>
-                  </>
-                )}
-              </button>
-            )}
-          </div>
+          {!isReviewStep ? (
+            <button
+              type="button"
+              onClick={handleNext}
+              disabled={!currentSelectedOptionId}
+              className={`w-full py-2.5 bg-[#004bbf] hover:bg-[#003993] active:scale-95 text-white font-bold text-sm rounded-md shadow-md transition-all text-center ${
+                !currentSelectedOptionId ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              OK
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="w-full py-2.5 bg-[#004bbf] hover:bg-[#003993] active:scale-95 text-white font-bold text-sm rounded-md shadow-md transition-all text-center flex items-center justify-center gap-2"
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Calculating Score...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  <span>Submit Assessment</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>

@@ -2,120 +2,73 @@ import Link from "next/link";
 import { ArrowRight, Compass, Hammer, Brain, Users, Crown, Sparkles, Clock, ListOrdered, ShieldCheck } from "lucide-react";
 
 export default function LandingPage() {
-  const archetypes = [
-    {
-      name: "Explorer",
-      desc: "Curious, adaptable, and energized by discovering possibilities.",
-      icon: Compass,
-      color: "from-blue-500/20 to-cyan-500/20 text-cyan-400 border-cyan-500/30",
-    },
-    {
-      name: "Builder",
-      desc: "Practical, creative, focused on turning ideas into reality.",
-      icon: Hammer,
-      color: "from-emerald-500/20 to-teal-500/20 text-emerald-400 border-emerald-500/30",
-    },
-    {
-      name: "Analyst",
-      desc: "Logical, methodical, driven by data and systems.",
-      icon: Brain,
-      color: "from-purple-500/20 to-indigo-500/20 text-purple-400 border-purple-500/30",
-    },
-    {
-      name: "Connector",
-      desc: "Collaborative, empathetic, focused on shared outcomes.",
-      icon: Users,
-      color: "from-amber-500/20 to-orange-500/20 text-amber-400 border-amber-500/30",
-    },
-    {
-      name: "Leader",
-      desc: "Decisive, goal-oriented, comfortable taking ownership.",
-      icon: Crown,
-      color: "from-rose-500/20 to-pink-500/20 text-rose-400 border-rose-500/30",
-    },
-  ];
-
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-12 sm:py-20 max-w-5xl mx-auto space-y-16">
-      {/* Header Badge */}
-      <div className="text-center space-y-4 max-w-3xl">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 shadow-inner">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Server-Evaluated Weighted Personality Blueprint</span>
-        </div>
-
-        <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-tight">
-          What Type of <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">Human Are You?</span>
-        </h1>
-
-        <p className="text-slate-300 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-          Answer five questions and discover the traits that best describe your approach to work, decisions, and collaboration.
-        </p>
-
-        {/* Assessment Stats Badge */}
-        <div className="flex items-center justify-center gap-6 pt-2 text-sm font-medium text-slate-400">
-          <div className="flex items-center gap-2">
-            <ListOrdered className="w-4 h-4 text-indigo-400" />
-            <span>5 questions</span>
-          </div>
-          <span className="text-slate-700">•</span>
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-indigo-400" />
-            <span>2 minutes</span>
-          </div>
-          <span className="text-slate-700">•</span>
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Data-Persisted</span>
-          </div>
-        </div>
-      </div>
-
-      {/* CTA Button */}
-      <div className="flex flex-col items-center gap-3">
-        <Link
-          href="/assessment"
-          className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 text-lg font-bold text-white rounded-2xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 shadow-xl shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200"
-        >
-          <span>Start Assessment</span>
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-        </Link>
-      </div>
-
-      {/* 5 Archetypes Cards */}
-      <div className="w-full space-y-6">
-        <div className="text-center">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">
-            5 Core Personality Archetypes
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {archetypes.map((arch) => {
-            const Icon = arch.icon;
-            return (
-              <div
-                key={arch.name}
-                className="glass-panel p-4 rounded-xl space-y-2.5 border transition-transform duration-200 hover:-translate-y-1"
-              >
-                <div
-                  className={`w-9 h-9 rounded-lg bg-gradient-to-br ${arch.color} border flex items-center justify-center`}
-                >
-                  <Icon className="w-5 h-5" />
-                </div>
-                <h3 className="font-bold text-white text-base">{arch.name}</h3>
-                <p className="text-xs text-slate-400 leading-snug">{arch.desc}</p>
+    <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 lg:p-12 min-h-screen">
+      {/* Expanded Form Container */}
+      <div className="w-full max-w-md sm:max-w-xl lg:max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col min-h-[580px] sm:min-h-[640px] p-6 sm:p-10 lg:p-12 text-center justify-between transition-all">
+        {/* Taylor & Francis by Informa Brand Logo */}
+        <div className="pt-2 sm:pt-4 flex flex-col items-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            {/* Lamp Icon Circle */}
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#001e42] flex items-center justify-center text-white shadow-md">
+              <svg className="w-8 h-8 sm:w-9 sm:h-9 fill-current" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+              </svg>
+            </div>
+            {/* Logo Text */}
+            <div className="text-left leading-tight">
+              <div className="text-xl sm:text-3xl font-serif font-bold text-[#001e42] tracking-tight">
+                Taylor & Francis
               </div>
-            );
-          })}
+              <div className="text-xs sm:text-sm font-semibold text-[#001e42]/80 flex items-center gap-1">
+                <span>by</span>
+                <span className="font-bold text-[#001e42]">informa</span>
+                <span className="flex gap-0.5 ml-0.5">
+                  <span className="w-1 h-1 rounded-full bg-slate-400"></span>
+                  <span className="w-1 h-1 rounded-full bg-slate-400"></span>
+                  <span className="w-1 h-1 rounded-full bg-slate-400"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Body */}
+        <div className="my-auto space-y-5 py-6">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-800 leading-snug">
+            Take the Research Integrity Challenge
+          </h1>
+
+          <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl mx-auto px-2">
+            Complete the quiz, get your score, and download the Taylor & Francis Research Integrity Toolkit — with practical resources to support responsible research.
+          </p>
+
+          <p className="text-xs sm:text-sm text-slate-500 italic max-w-lg mx-auto px-4 leading-normal">
+            By submitting this form, you agree to receive relevant communications from Taylor & Francis.
+          </p>
+        </div>
+
+        {/* CTA & Time Estimation */}
+        <div className="pb-2 sm:pb-4 space-y-3 flex flex-col items-center">
+          <Link
+            href="/assessment"
+            className="w-36 sm:w-44 py-3 bg-[#004bbf] hover:bg-[#003993] active:scale-95 text-white font-bold text-sm sm:text-base rounded-lg shadow-md transition-all text-center"
+          >
+            Start
+          </Link>
+
+          <div className="flex items-center gap-1.5 text-xs sm:text-sm text-slate-500 font-medium">
+            <Clock className="w-4 h-4 text-slate-400" />
+            <span>Takes 2 minutes</span>
+          </div>
         </div>
       </div>
 
-      {/* Admin Link Footer */}
-      <div className="text-center pt-8 border-t border-slate-800/80 w-full text-xs text-slate-500">
+      {/* Admin Quick Access Footer */}
+      <div className="text-center mt-6 text-xs text-slate-500">
         <Link
           href="/admin"
-          className="hover:text-indigo-400 underline underline-offset-4 transition-colors"
+          className="hover:text-[#004bbf] font-medium underline underline-offset-4 transition-colors"
         >
           Access Administrator Dashboard →
         </Link>

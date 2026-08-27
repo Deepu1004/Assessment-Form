@@ -81,7 +81,7 @@ export default function ResultPage() {
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:py-16 max-w-4xl mx-auto w-full">
+    <div className="flex-1 flex flex-col items-center justify-center w-full">
       <ResultCard
         result={data.result}
         finalScore={data.finalScore}
