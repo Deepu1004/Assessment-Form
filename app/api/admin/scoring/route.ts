@@ -29,7 +29,10 @@ export async function GET() {
     return NextResponse.json({ matrix }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to fetch scoring matrix." }, { status: 500 });
+    return NextResponse.json(
+      { matrix: [], warning: "Database connection unavailable. Set DATABASE_URL in Vercel settings." },
+      { status: 200 }
+    );
   }
 }
 

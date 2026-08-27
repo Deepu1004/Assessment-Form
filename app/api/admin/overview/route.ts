@@ -76,8 +76,16 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching admin overview:", error);
     return NextResponse.json(
-      { error: "Failed to load admin overview." },
-      { status: 500 }
+      {
+        totalSubmissions: 0,
+        averageScore: 0,
+        minScore: 0,
+        maxScore: 0,
+        distribution: [],
+        recentSubmissions: [],
+        warning: "Database not connected or uninitialized. Set DATABASE_URL in environment variables."
+      },
+      { status: 200 }
     );
   }
 }
