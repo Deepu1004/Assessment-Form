@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ADMIN_COOKIE_NAME, ADMIN_TOKEN_SECRET } from "@/lib/auth";
+import { ADMIN_COOKIE_NAME, ADMIN_TOKEN_SECRET } from "./lib/auth";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
