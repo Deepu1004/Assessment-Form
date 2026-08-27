@@ -22,8 +22,17 @@ export function ResultCard({
       {/* Expanded Result Container */}
       <div className="w-full max-w-md sm:max-w-xl lg:max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col min-h-[580px] sm:min-h-[640px] p-6 sm:p-10 lg:p-12 text-center justify-between transition-all">
         
+        {/* Header Logo */}
+        <div className="pt-2 flex flex-col items-center">
+          <img
+            src="/tf-logo.jpg"
+            alt="Taylor & Francis"
+            className="h-12 sm:h-16 w-auto object-contain"
+          />
+        </div>
+
         {/* Result Header & Score */}
-        <div className="my-auto space-y-6 sm:space-y-8 py-6">
+        <div className="my-auto space-y-6 sm:space-y-8 py-4">
           <div className="space-y-2">
             <h1 className="text-base sm:text-xl font-normal text-slate-700">
               Your Research Integrity Score
@@ -37,7 +46,7 @@ export function ResultCard({
             <h2 className="text-base sm:text-xl font-normal text-slate-700">
               Your Integrity Personality
             </h2>
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight">
+            <div className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 tracking-tight">
               {result.type}
             </div>
           </div>

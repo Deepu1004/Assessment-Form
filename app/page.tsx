@@ -7,30 +7,13 @@ export default function LandingPage() {
       {/* Expanded Form Container */}
       <div className="w-full max-w-md sm:max-w-xl lg:max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col min-h-[580px] sm:min-h-[640px] p-6 sm:p-10 lg:p-12 text-center justify-between transition-all">
         {/* Taylor & Francis by Informa Brand Logo */}
-        <div className="pt-2 sm:pt-4 flex flex-col items-center space-y-4">
-          <div className="flex items-center justify-center gap-3">
-            {/* Lamp Icon Circle */}
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#001e42] flex items-center justify-center text-white shadow-md">
-              <svg className="w-8 h-8 sm:w-9 sm:h-9 fill-current" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-              </svg>
-            </div>
-            {/* Logo Text */}
-            <div className="text-left leading-tight">
-              <div className="text-xl sm:text-3xl font-serif font-bold text-[#001e42] tracking-tight">
-                Taylor & Francis
-              </div>
-              <div className="text-xs sm:text-sm font-semibold text-[#001e42]/80 flex items-center gap-1">
-                <span>by</span>
-                <span className="font-bold text-[#001e42]">informa</span>
-                <span className="flex gap-0.5 ml-0.5">
-                  <span className="w-1 h-1 rounded-full bg-slate-400"></span>
-                  <span className="w-1 h-1 rounded-full bg-slate-400"></span>
-                  <span className="w-1 h-1 rounded-full bg-slate-400"></span>
-                </span>
-              </div>
-            </div>
-          </div>
+        <div className="pt-2 sm:pt-4 flex flex-col items-center">
+          {/* Official Logo Image */}
+          <img
+            src="/tf-logo.jpg"
+            alt="Taylor & Francis by Informa"
+            className="h-16 sm:h-20 md:h-24 w-auto object-contain"
+          />
         </div>
 
         {/* Content Body */}

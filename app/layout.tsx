@@ -1,13 +1,28 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Open_Sans, Aleo } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-open-sans",
+});
+
+const aleo = Aleo({
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
+  variable: "--font-aleo",
+});
 
 export const metadata: Metadata = {
-  title: "Personality Blueprint | Weighted Personality Assessment",
+  title: "Research Integrity Challenge | Taylor & Francis",
   description:
-    "Discover your dominant personality archetype through our data-driven, weighted assessment engine.",
+    "Take the Research Integrity Challenge and discover your integrity personality profile.",
+  icons: {
+    icon: "/tf-favicon.webp",
+    shortcut: "/tf-favicon.webp",
+    apple: "/tf-favicon.webp",
+  },
 };
 
 export default function RootLayout({
@@ -16,8 +31,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
-      <body className="antialiased bg-[#eef3f9] text-slate-900 min-h-screen flex flex-col selection:bg-[#004bbf] selection:text-white relative">
+    <html lang="en" className={`${openSans.variable} ${aleo.variable}`}>
+      <body className="antialiased bg-[#eef3f9] text-slate-900 min-h-screen flex flex-col selection:bg-[#004bbf] selection:text-white relative font-sans text-left">
         {/* Soft light background container */}
         <div className="fixed inset-0 pointer-events-none z-0 bg-gradient-to-br from-[#f8fafc] via-[#edf2f8] to-[#e2e8f0]" />
 

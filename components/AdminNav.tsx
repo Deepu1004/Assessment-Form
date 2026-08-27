@@ -37,10 +37,12 @@ export function AdminNav() {
     <header className="border-b border-slate-200 bg-white/90 backdrop-blur-md sticky top-0 z-40 shadow-xs">
       <div className="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-[#004bbf] flex items-center justify-center text-white font-bold text-xs shadow-md">
-            <Sparkles className="w-4 h-4" />
-          </div>
-          <div>
+          <img
+            src="/tf-logo.jpg"
+            alt="Taylor & Francis"
+            className="h-10 w-auto object-contain"
+          />
+          <div className="border-l border-slate-300 pl-3">
             <h1 className="font-bold text-slate-900 text-base leading-tight">
               Assessment Admin Studio
             </h1>

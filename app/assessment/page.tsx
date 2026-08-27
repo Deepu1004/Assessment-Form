@@ -136,6 +136,18 @@ export default function AssessmentPage() {
       {/* Expanded Form Container */}
       <div className="w-full max-w-md sm:max-w-xl lg:max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col min-h-[580px] sm:min-h-[640px] p-6 sm:p-10 lg:p-12 justify-between relative transition-all">
         
+        {/* Taylor & Francis Header Logo */}
+        <div className="pb-4 border-b border-slate-100 flex items-center justify-between mb-4">
+          <img
+            src="/tf-logo.jpg"
+            alt="Taylor & Francis"
+            className="h-8 sm:h-10 w-auto object-contain"
+          />
+          <span className="text-xs font-semibold text-slate-500 font-mono">
+            {currentStep <= totalQuestions ? `Question ${currentStep} of ${totalQuestions}` : "Review"}
+          </span>
+        </div>
+
         {/* Step 1 to N: Question Display */}
         {!isReviewStep && currentQuestion && (
           <QuestionCard
