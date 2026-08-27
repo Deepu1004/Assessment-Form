@@ -13,3 +13,9 @@ export function cryptoRandomString(length = 16): string {
   }
   return result;
 }
+
+export function formatQuestionText(text: string): string {
+  if (!text) return "";
+  return text.replace(/^Theme\s*\d+:\s*(?:.*?[—\-]\s*)?/i, "").trim();
+}
+

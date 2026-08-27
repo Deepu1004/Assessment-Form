@@ -6,6 +6,7 @@ import { QuestionDTO, SubmissionAnswerInput } from "@/types/assessment";
 import { ProgressBar } from "@/components/ProgressBar";
 import { QuestionCard } from "@/components/QuestionCard";
 import { ArrowLeft, ArrowRight, Loader2, Send, Edit2, AlertCircle } from "lucide-react";
+import { formatQuestionText } from "@/lib/utils";
 
 export default function AssessmentPage() {
   const router = useRouter();
@@ -186,7 +187,7 @@ export default function AssessmentPage() {
                       <span className="text-[10px] font-bold text-[#004bbf] uppercase">
                         Question {idx + 1}
                       </span>
-                      <p className="text-xs font-medium text-slate-700 truncate">{q.questionText}</p>
+                      <p className="text-xs font-medium text-slate-700 truncate">{formatQuestionText(q.questionText)}</p>
                       <p className="text-xs text-[#003993] font-semibold truncate">
                         → {selectedOpt ? `${selectedOpt.optionKey}. ${selectedOpt.optionText}` : "No answer"}
                       </p>

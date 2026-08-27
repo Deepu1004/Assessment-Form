@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import { QuestionDTO, AnswerOptionDTO } from "@/types/assessment";
+import { formatQuestionText } from "@/lib/utils";
 
 interface QuestionCardProps {
   question: QuestionDTO;
@@ -42,7 +43,7 @@ export function QuestionCard({
 
       {/* Scenario Text */}
       <h2 className="text-base sm:text-lg lg:text-xl font-medium text-slate-800 leading-snug">
-        {question.questionText}*
+        {formatQuestionText(question.questionText)}*
       </h2>
 
       {/* Answer Options matching Image 2 */}

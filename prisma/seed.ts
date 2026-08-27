@@ -70,7 +70,7 @@ async function main() {
   const questionsData = [
     {
       displayOrder: 1,
-      questionText: "Theme 1: Responsible Use of AI & Research Transparency — You are analyzing your research results using an AI tool. The tool produces a result that supports your hypothesis. What would you do?",
+      questionText: "You are analyzing your research results using an AI tool. The tool produces a result that supports your hypothesis. What would you do?",
       options: [
         { optionKey: "A", optionText: "Use it - the results look reliable.", score: 1, displayOrder: 1 },
         { optionKey: "B", optionText: "Avoid AI altogether.", score: 2, displayOrder: 2 },
@@ -80,7 +80,7 @@ async function main() {
     },
     {
       displayOrder: 2,
-      questionText: "Theme 2: Research Data Integrity & Transparency — While reviewing your dataset, you discover unexpected observations/outliers. Removing them would make your findings much clearer. What would you do?",
+      questionText: "While reviewing your dataset, you discover unexpected observations/outliers. Removing them would make your findings much clearer. What would you do?",
       options: [
         { optionKey: "A", optionText: "Remove them because they're probably anomalies.", score: 1, displayOrder: 1 },
         { optionKey: "B", optionText: "Keep them out of the main analysis, but mention them in the discussion if necessary.", score: 2, displayOrder: 2 },
@@ -90,7 +90,7 @@ async function main() {
     },
     {
       displayOrder: 3,
-      questionText: "Theme 3: Authorship Ethics — You're preparing a manuscript. One senior researcher made an important contribution early in the project but has had little involvement since. Another researcher did substantial work analyzing data and drafting the manuscript. How would you approach authorship?",
+      questionText: "You're preparing a manuscript. One senior researcher made an important contribution early in the project but has had little involvement since. Another researcher did substantial work analyzing data and drafting the manuscript. How would you approach authorship?",
       options: [
         { optionKey: "A", optionText: "Give the senior researcher first authorship because of their position.", score: 1, displayOrder: 1 },
         { optionKey: "B", optionText: "Let the most senior researcher decide.", score: 2, displayOrder: 2 },
@@ -100,7 +100,7 @@ async function main() {
     },
     {
       displayOrder: 4,
-      questionText: "Theme 4: Peer Review & Conflicts of Interest — You've been invited to review a manuscript on a topic very close to your own unpublished research. You could potentially benefit from seeing their approach before publishing your own work. What would you do?",
+      questionText: "You've been invited to review a manuscript on a topic very close to your own unpublished research. You could potentially benefit from seeing their approach before publishing your own work. What would you do?",
       options: [
         { optionKey: "A", optionText: "Review it quickly and make sure you publish your own work first.", score: 1, displayOrder: 1 },
         { optionKey: "B", optionText: "Accept the review - it could help you understand the field better.", score: 2, displayOrder: 2 },
@@ -110,7 +110,7 @@ async function main() {
     },
     {
       displayOrder: 5,
-      questionText: "Theme 5: Sharing Findings & Public Communication — Your research produced an exciting finding that could attract significant attention on social media. However, the study has limitations and could easily be misunderstood without context. What would you do?",
+      questionText: "Your research produced an exciting finding that could attract significant attention on social media. However, the study has limitations and could easily be misunderstood without context. What would you do?",
       options: [
         { optionKey: "A", optionText: "Share the most exciting finding first - the full paper contains the limitations.", score: 1, displayOrder: 1 },
         { optionKey: "B", optionText: "Share it but leave the interpretation to the audience.", score: 2, displayOrder: 2 },
