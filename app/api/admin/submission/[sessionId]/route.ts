@@ -48,6 +48,11 @@ export async function GET(
       {
         sessionId: session.id,
         sessionToken: session.sessionToken,
+        fullName: session.fullName,
+        email: session.email,
+        jobTitle: session.jobTitle,
+        organisationName: session.organisationName,
+        researchArea: session.researchArea,
         startedAt: session.startedAt.toISOString(),
         completedAt: session.completedAt?.toISOString() || null,
         status: session.status,

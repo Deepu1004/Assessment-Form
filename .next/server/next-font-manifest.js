@@ -1,1 +1,1 @@
-self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/satyanagasai.deepakvaranasi/Documents/typeform-recreation/app/layout":["static/media/e807dee2426166ad-s.p.woff2","static/media/986db6912e5fb43a-s.p.woff2"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';
+self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/satyanagasai.deepakvaranasi/Documents/typeform-recreation/app/layout":["static/media/986db6912e5fb43a-s.p.woff2","static/media/e807dee2426166ad-s.p.woff2"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';

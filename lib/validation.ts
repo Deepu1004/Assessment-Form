@@ -15,6 +15,11 @@ export const submitAssessmentSchema = z.object({
       required_error: "answers must be an array",
     })
     .min(1, "answers array cannot be empty"),
+  fullName: z.string().optional(),
+  email: z.string().email("Invalid email format").optional().or(z.literal("")),
+  jobTitle: z.string().optional(),
+  organisationName: z.string().optional(),
+  researchArea: z.string().optional(),
 });
 
 export type SubmitAssessmentInput = z.infer<typeof submitAssessmentSchema>;

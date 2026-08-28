@@ -47,6 +47,11 @@ export interface SubmissionAnswerInput {
 
 export interface SubmissionPayload {
   answers: SubmissionAnswerInput[];
+  fullName?: string;
+  email?: string;
+  jobTitle?: string;
+  organisationName?: string;
+  researchArea?: string;
 }
 
 export interface SubmissionResponse {
@@ -73,6 +78,8 @@ export interface AdminOverviewDTO {
   recentSubmissions: Array<{
     id: string;
     sessionToken: string;
+    fullName?: string | null;
+    email?: string | null;
     completedAt: string;
     resultType: string;
     resultSlug: string;
@@ -83,6 +90,11 @@ export interface AdminOverviewDTO {
 export interface AdminSubmissionDetailDTO {
   sessionId: string;
   sessionToken: string;
+  fullName?: string | null;
+  email?: string | null;
+  jobTitle?: string | null;
+  organisationName?: string | null;
+  researchArea?: string | null;
   startedAt: string;
   completedAt: string;
   status: string;

@@ -56,6 +56,8 @@ export async function GET() {
     const recentSubmissions = recentSessions.map((s) => ({
       id: s.id,
       sessionToken: s.sessionToken,
+      fullName: s.fullName,
+      email: s.email,
       completedAt: s.completedAt?.toISOString() || s.startedAt.toISOString(),
       resultType: s.result?.resultType.name || "Unknown",
       resultSlug: s.result?.resultType.slug || "unknown",

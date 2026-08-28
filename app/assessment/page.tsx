@@ -8,6 +8,17 @@ import { QuestionCard } from "@/components/QuestionCard";
 import { ArrowLeft, ArrowRight, Loader2, Send, Edit2, AlertCircle } from "lucide-react";
 import { formatQuestionText } from "@/lib/utils";
 
+const RESEARCH_AREAS = [
+  "Allied and Public Health",
+  "Biological, Earth, Environmental and Food Sciences",
+  "Dentistry",
+  "Engineering, Computing and Technology",
+  "General Medicine",
+  "Humanities, Media and Arts",
+  "Physical and Chemical Sciences",
+  "Social Sciences",
+];
+
 export default function AssessmentPage() {
   const router = useRouter();
 
@@ -15,8 +26,16 @@ export default function AssessmentPage() {
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const [currentStep, setCurrentStep] = useState(1); // 1 to questions.length, step N+1 is Review
+  const [currentStep, setCurrentStep] = useState(1); // 1 to questions.length, N+1 is Details, N+2 is Review
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({}); // questionId -> answerOptionId
+  
+  // Participant Demographic Details
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [organisationName, setOrganisationName] = useState("");
+  const [researchArea, setResearchArea] = useState("");
+
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -43,7 +62,8 @@ export default function AssessmentPage() {
   }, []);
 
   const totalQuestions = questions.length;
-  const isReviewStep = currentStep === totalQuestions + 1;
+  const isDetailsStep = currentStep === totalQuestions + 1;
+  const isReviewStep = currentStep === totalQuestions + 2;
   const currentQuestion = questions[currentStep - 1];
 
   const currentSelectedOptionId = currentQuestion
@@ -61,6 +81,8 @@ export default function AssessmentPage() {
   const handleNext = () => {
     if (currentStep <= totalQuestions) {
       if (!currentSelectedOptionId) return; // Prevent advancing without selecting an answer
+      setCurrentStep((prev) => prev + 1);
+    } else if (isDetailsStep) {
       setCurrentStep((prev) => prev + 1);
     }
   };
@@ -86,7 +108,14 @@ export default function AssessmentPage() {
       const res = await fetch("/api/assessment/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: formattedAnswers }),
+        body: JSON.stringify({
+          answers: formattedAnswers,
+          fullName,
+          email,
+          jobTitle,
+          organisationName,
+          researchArea,
+        }),
       });
 
       const data = await res.json();
@@ -145,12 +174,16 @@ export default function AssessmentPage() {
             className="h-8 sm:h-10 w-auto object-contain"
           />
           <span className="text-xs font-semibold text-slate-500 font-mono">
-            {currentStep <= totalQuestions ? `Question ${currentStep} of ${totalQuestions}` : "Review"}
+            {currentStep <= totalQuestions
+              ? `Question ${currentStep} of ${totalQuestions}`
+              : isDetailsStep
+              ? "Participant Info"
+              : "Review & Submit"}
           </span>
         </div>
 
         {/* Step 1 to N: Question Display */}
-        {!isReviewStep && currentQuestion && (
+        {currentStep <= totalQuestions && currentQuestion && (
           <QuestionCard
             question={currentQuestion}
             selectedOptionId={currentSelectedOptionId}
@@ -158,7 +191,96 @@ export default function AssessmentPage() {
           />
         )}
 
-        {/* Step N+1: Review Answers Page */}
+        {/* Step N+1: Participant Details Form */}
+        {isDetailsStep && (
+          <div className="space-y-4 text-left py-2 max-h-[440px] overflow-y-auto pr-1">
+            <div>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-[#004bbf] mb-2">
+                Participant Information
+              </span>
+              <h2 className="text-lg font-bold text-slate-800 tracking-tight">
+                Tell Us About Yourself
+              </h2>
+              <p className="text-slate-500 text-xs">
+                Please enter your details to accompany your Research Integrity assessment.
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="e.g. Dr. Jane Doe"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="e.g. jane.doe@university.edu"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Job Title
+                </label>
+                <input
+                  type="text"
+                  value={jobTitle}
+                  onChange={(e) => setJobTitle(e.target.value)}
+                  placeholder="e.g. Associate Professor"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Organisation Name
+                </label>
+                <input
+                  type="text"
+                  value={organisationName}
+                  onChange={(e) => setOrganisationName(e.target.value)}
+                  placeholder="e.g. University of Oxford"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Your Research Area (Choose One)
+                </label>
+                <select
+                  value={researchArea}
+                  onChange={(e) => setResearchArea(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
+                >
+                  <option value="">-- Select Research Area --</option>
+                  {RESEARCH_AREAS.map((area) => (
+                    <option key={area} value={area}>
+                      {area}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step N+2: Review Answers Page */}
         {isReviewStep && (
           <div className="space-y-4 text-left">
             <div>
@@ -166,14 +288,35 @@ export default function AssessmentPage() {
                 Final Step
               </span>
               <h2 className="text-lg font-bold text-slate-800 tracking-tight">
-                Review Your Answers
+                Review Your Answers & Information
               </h2>
               <p className="text-slate-500 text-xs">
-                Check your choices before calculating your Research Integrity score.
+                Check your details and choices before calculating your Research Integrity score.
               </p>
             </div>
 
-            <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+            {/* Participant Info Summary Card */}
+            {(fullName || email || jobTitle || organisationName || researchArea) && (
+              <div className="p-3 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-between text-left">
+                <div className="space-y-0.5 text-xs text-slate-700">
+                  <p className="font-bold text-[#004bbf]">Participant Details:</p>
+                  {fullName && <p><span className="font-medium text-slate-500">Name:</span> {fullName}</p>}
+                  {email && <p><span className="font-medium text-slate-500">Email:</span> {email}</p>}
+                  {jobTitle && <p><span className="font-medium text-slate-500">Title:</span> {jobTitle}</p>}
+                  {organisationName && <p><span className="font-medium text-slate-500">Org:</span> {organisationName}</p>}
+                  {researchArea && <p><span className="font-medium text-slate-500">Area:</span> {researchArea}</p>}
+                </div>
+                <button
+                  onClick={() => setCurrentStep(totalQuestions + 1)}
+                  className="p-1.5 rounded bg-white text-slate-600 border border-slate-300 hover:text-[#004bbf] hover:border-[#004bbf] transition-colors flex items-center gap-1 text-[11px] font-semibold shrink-0"
+                >
+                  <Edit2 className="w-3 h-3" />
+                  Edit Details
+                </button>
+              </div>
+            )}
+
+            <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
               {questions.map((q, idx) => {
                 const selectedOptId = selectedAnswers[q.id];
                 const selectedOpt = q.options.find((o) => o.id === selectedOptId);
@@ -231,9 +374,9 @@ export default function AssessmentPage() {
             <button
               type="button"
               onClick={handleNext}
-              disabled={!currentSelectedOptionId}
+              disabled={currentStep <= totalQuestions && !currentSelectedOptionId}
               className={`w-full py-2.5 bg-[#004bbf] hover:bg-[#003993] active:scale-95 text-white font-bold text-sm rounded-md shadow-md transition-all text-center ${
-                !currentSelectedOptionId ? "opacity-50 cursor-not-allowed" : ""
+                currentStep <= totalQuestions && !currentSelectedOptionId ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
               OK

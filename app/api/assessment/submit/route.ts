@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { answers } = validationResult.data;
+    const { answers, fullName, email, jobTitle, organisationName, researchArea } = validationResult.data;
 
     // 2. Fetch active questions & options with scores from DB
     const activeQuestions = await prisma.question.findMany({
@@ -112,6 +112,11 @@ export async function POST(req: NextRequest) {
           status: "COMPLETED",
           completedAt: new Date(),
           finalScore: scoreResult.finalScore,
+          fullName: fullName?.trim() || null,
+          email: email?.trim() || null,
+          jobTitle: jobTitle?.trim() || null,
+          organisationName: organisationName?.trim() || null,
+          researchArea: researchArea?.trim() || null,
         },
       });
 
