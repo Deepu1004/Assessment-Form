@@ -80,6 +80,9 @@ export interface AdminOverviewDTO {
     sessionToken: string;
     fullName?: string | null;
     email?: string | null;
+    jobTitle?: string | null;
+    organisationName?: string | null;
+    researchArea?: string | null;
     completedAt: string;
     resultType: string;
     resultSlug: string;
