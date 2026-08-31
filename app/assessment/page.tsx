@@ -124,6 +124,12 @@ export default function AssessmentPage() {
         throw new Error(data.error || "Submission failed. Please try again.");
       }
 
+      // Mark this session as taken on this device so the result page can
+      // distinguish the participant's own browser from a shared link.
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(`own-result:${data.sessionId}`, "1");
+      }
+
       // Navigate to results page
       router.push(`/result/${data.sessionId}`);
     } catch (err) {

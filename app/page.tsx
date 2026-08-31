@@ -46,16 +46,6 @@ export default function LandingPage() {
           </div>
         </div>
       </div>
-
-      {/* Admin Quick Access Footer */}
-      <div className="text-center mt-6 text-xs text-slate-500">
-        <Link
-          href="/admin"
-          className="hover:text-[#004bbf] font-medium underline underline-offset-4 transition-colors"
-        >
-          Access Administrator Dashboard →
-        </Link>
-      </div>
     </div>
   );
 }

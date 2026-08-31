@@ -19,3 +19,14 @@ export function formatQuestionText(text: string): string {
   return text.replace(/^Theme\s*\d+:\s*(?:.*?[—\-]\s*)?/i, "").trim();
 }
 
+export function formatDateTimeIST(date: string | Date): string {
+  return new Date(date).toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }) + " IST";
+}
+

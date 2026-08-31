@@ -1,5 +1,7 @@
-import React from "react";
-import { Trophy, RotateCcw, Share2, Sparkles, LayoutDashboard } from "lucide-react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+import { Download, Facebook, Linkedin, Twitter, MessageCircle } from "lucide-react";
 import Link from "next/link";
 
 interface ResultCardProps {
@@ -16,7 +18,42 @@ interface ResultCardProps {
 export function ResultCard({
   result,
   finalScore,
+  sessionId,
 }: ResultCardProps) {
+  const [isOwnResult, setIsOwnResult] = useState(false);
+
+  useEffect(() => {
+    setIsOwnResult(window.localStorage.getItem(`own-result:${sessionId}`) === "1");
+  }, [sessionId]);
+
+  const shareUrl =
+    typeof window !== "undefined" ? `${window.location.origin}/result/${sessionId}` : "";
+  const shareText = `I got "${result.type}" on the Taylor & Francis Research Integrity Challenge!`;
+  const whatsappText = shareText + " " + shareUrl;
+
+  const shareLinks = [
+    {
+      name: "X",
+      icon: Twitter,
+      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+    },
+    {
+      name: "LinkedIn",
+      icon: Linkedin,
+      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`,
+    },
+    {
+      name: "Facebook",
+      icon: Facebook,
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+    },
+    {
+      name: "WhatsApp",
+      icon: MessageCircle,
+      href: `https://wa.me/?text=${encodeURIComponent(whatsappText)}`,
+    },
+  ];
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 lg:p-12 min-h-screen">
       {/* Expanded Result Container */}
@@ -35,19 +72,19 @@ export function ResultCard({
         <div className="my-auto space-y-6 sm:space-y-8 py-4">
           <div className="space-y-2">
             <h1 className="text-base sm:text-xl font-normal text-slate-700">
-              Your Research Integrity Score
+              Your Integrity Personality
             </h1>
-            <div className="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 tracking-tight">
-              {finalScore * 2} / 50
+            <div className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight">
+              {result.type}
             </div>
           </div>
 
-          <div className="space-y-2">
-            <h2 className="text-base sm:text-xl font-normal text-slate-700">
-              Your Integrity Personality
+          <div className="space-y-1">
+            <h2 className="text-sm sm:text-base font-normal text-slate-500">
+              Research Integrity Score
             </h2>
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-slate-900 tracking-tight">
-              {result.type}
+            <div className="text-xl sm:text-2xl font-bold text-slate-700 tracking-tight">
+              {finalScore * 2} / 50
             </div>
           </div>
 
@@ -67,13 +104,41 @@ export function ResultCard({
             Explore Resources
           </a>
 
+          <a
+            href="/Research-integrity-A-toolkit-for-early-career-researchers.pdf"
+            download
+            className="w-full max-w-md py-3 border border-[#004bbf] text-[#004bbf] hover:bg-blue-50 active:scale-95 font-bold text-sm sm:text-base rounded-lg transition-all text-center flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Download Research Integrity Toolkit (PDF)
+          </a>
+
+          <div className="w-full max-w-md space-y-2 pt-2">
+            <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              Share your result
+            </p>
+            <div className="flex items-center justify-center gap-3">
+              {shareLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Share on ${link.name}`}
+                    className="w-11 h-11 flex items-center justify-center rounded-full bg-slate-100 text-slate-600 hover:bg-[#004bbf] hover:text-white transition-colors border border-slate-200"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="flex items-center gap-4 text-xs text-slate-400">
             <Link href="/assessment" className="hover:text-slate-600 underline">
-              Retake Quiz
-            </Link>
-            <span>•</span>
-            <Link href="/admin" className="hover:text-slate-600 underline">
-              Admin Studio
+              {isOwnResult ? "Retake Quiz" : "Try it yourself"}
             </Link>
           </div>
         </div>

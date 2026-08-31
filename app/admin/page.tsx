@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { AdminOverviewDTO, AdminSubmissionDetailDTO } from "@/types/assessment";
+import { formatDateTimeIST } from "@/lib/utils";
 import {
   Users,
   Trophy,
@@ -13,6 +14,7 @@ import {
   X,
   BarChart3,
   Calculator,
+  Download,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -96,6 +98,13 @@ export default function AdminDashboardOverviewPage() {
             <RefreshCw className="w-4 h-4 text-slate-500" />
             Refresh
           </button>
+          <a
+            href="/api/admin/export"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900 text-sm font-semibold transition-colors shadow-sm"
+          >
+            <Download className="w-4 h-4 text-slate-500" />
+            Export to Excel
+          </a>
           <Link
             href="/admin/builder"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#004bbf] hover:bg-[#003993] text-white text-sm font-bold shadow-md transition-all"
@@ -228,7 +237,7 @@ export default function AdminDashboardOverviewPage() {
                               {sub.finalScore} pts
                             </td>
                             <td className="px-4 py-3 text-xs text-slate-500">
-                              {new Date(sub.completedAt).toLocaleDateString()} {new Date(sub.completedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                              {formatDateTimeIST(sub.completedAt)}
                             </td>
                             <td className="px-4 py-3 text-right">
                               <button
