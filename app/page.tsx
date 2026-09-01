@@ -1,5 +1,17 @@
 import Link from "next/link";
-import { ArrowRight, Compass, Hammer, Brain, Users, Crown, Sparkles, Clock, ListOrdered, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  Compass,
+  Hammer,
+  Brain,
+  Users,
+  Crown,
+  Sparkles,
+  Clock,
+  ListOrdered,
+  ShieldCheck,
+} from "lucide-react";
+import { Analytics } from "@vercel/analytics/next";
 
 export default function LandingPage() {
   return (
@@ -23,11 +35,14 @@ export default function LandingPage() {
           </h1>
 
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl mx-auto px-2">
-            Complete the quiz, get your score, and download the Taylor & Francis Research Integrity Toolkit — with practical resources to support responsible research.
+            Complete the quiz, get your score, and download the Taylor & Francis
+            Research Integrity Toolkit — with practical resources to support
+            responsible research.
           </p>
 
           <p className="text-xs sm:text-sm text-slate-500 italic max-w-lg mx-auto px-4 leading-normal">
-            By submitting this form, you agree to receive relevant communications from Taylor & Francis.
+            By submitting this form, you agree to receive relevant
+            communications from Taylor & Francis.
           </p>
         </div>
 
