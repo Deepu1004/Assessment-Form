@@ -72,7 +72,7 @@ Public Assessment (/) ──► Start Assessment (/assessment)
 - **Database**: MongoDB 7.0 (Replica Set enabled via Docker Compose for transactions)
 - **ORM**: Prisma ORM v6
 - **Validation**: Zod (Payload validation & score range overlap verification)
-- **Authentication**: HTTP-Only Cookie Session Management (`ADMIN_PASSWORD` / `ADMIN_SECRET`)
+- **Authentication**: Username/password admin accounts (`lib/auth.ts`) + HTTP-Only Cookie Session Management (`ADMIN_SECRET`)
 - **Testing**: Vitest (Unit & Integration tests)
 
 ---
@@ -91,9 +91,10 @@ Create a `.env` file in the root directory:
 
 ```env
 DATABASE_URL="mongodb://localhost:27017/personality_db?replicaSet=rs0&directConnection=true"
-ADMIN_PASSWORD="admin123"
 ADMIN_SECRET="super-secret-admin-key-change-this-in-prod"
 ```
+
+Admin usernames/passwords are managed in `lib/auth.ts` (`ADMIN_ACCOUNTS`) rather than environment variables.
 
 ---
 

@@ -136,7 +136,7 @@ export function ResultCard({
               Research Integrity Score
             </h2>
             <div className="text-xl sm:text-2xl font-bold text-slate-700 tracking-tight">
-              {finalScore * 2} / 50
+              {finalScore} / 50
             </div>
           </div>
 
@@ -147,15 +147,6 @@ export function ResultCard({
 
         {/* Bottom CTA matching image 3 */}
         <div className="pb-2 sm:pb-4 flex flex-col items-center space-y-4">
-          <a
-            href="https://newsroom.taylorandfrancisgroup.com/taylor-francis-launches-free-research-integrity-guide/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full max-w-md py-3.5 bg-[#004bbf] hover:bg-[#003993] active:scale-95 text-white font-bold text-sm sm:text-base rounded-lg shadow-md transition-all text-center"
-          >
-            Explore Resources
-          </a>
-
           <a
             href="/Research-integrity-A-toolkit-for-early-career-researchers.pdf"
             download

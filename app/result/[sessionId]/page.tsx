@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     : "Research Integrity Challenge | Taylor & Francis";
 
   const description = personaName
-    ? `I scored ${score !== undefined ? score * 2 : "?"}/50 and got "${personaName}" on the Taylor & Francis Research Integrity Challenge. Take the quiz and see your own result!`
+    ? `I scored ${score ?? "?"}/50 and got "${personaName}" on the Taylor & Francis Research Integrity Challenge. Take the quiz and see your own result!`
     : "Take the Research Integrity Challenge and discover your integrity personality profile.";
 
   return {

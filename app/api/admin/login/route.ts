@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DEFAULT_ADMIN_PASSWORD, ADMIN_COOKIE_NAME, ADMIN_TOKEN_SECRET } from "@/lib/auth";
+import { findAdminAccount, ADMIN_COOKIE_NAME, ADMIN_TOKEN_SECRET } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { password } = body;
+    const { username, password } = body;
 
-    if (password !== DEFAULT_ADMIN_PASSWORD) {
+    if (typeof username !== "string" || typeof password !== "string" || !findAdminAccount(username, password)) {
       return NextResponse.json(
-        { error: "Invalid admin password." },
+        { error: "Invalid username or password." },
         { status: 401 }
       );
     }

@@ -79,7 +79,7 @@ export default async function OpengraphImage({
             }}
           >
             <div style={{ fontSize: 48, fontWeight: 700, color: "#004bbf", display: "flex" }}>
-              {finalScore * 2}
+              {finalScore}
             </div>
             <div style={{ fontSize: 28, color: "#64748b", display: "flex" }}>/ 50 Score</div>
           </div>
