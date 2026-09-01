@@ -254,6 +254,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/api/admin/toolkit-downloads/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/toolkit-downloads">> = Specific
+  const handler = {} as typeof import("../../app/api/admin/toolkit-downloads/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/api/assessment/result/[sessionId]/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/assessment/result/[sessionId]">> = Specific
@@ -276,6 +285,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/assessment/submit">> = Specific
   const handler = {} as typeof import("../../app/api/assessment/submit/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/toolkit-download/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/toolkit-download">> = Specific
+  const handler = {} as typeof import("../../app/api/toolkit-download/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

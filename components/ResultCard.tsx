@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Download, Facebook, Linkedin, Twitter, MessageCircle } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { Download, Facebook, Linkedin, Twitter, MessageCircle, Share2, Loader2 } from "lucide-react";
 import Link from "next/link";
+import { getOrCreateVisitorId } from "@/lib/utils";
 
 interface ResultCardProps {
   result: {
@@ -21,6 +22,8 @@ export function ResultCard({
   sessionId,
 }: ResultCardProps) {
   const [isOwnResult, setIsOwnResult] = useState(false);
+  const [sharing, setSharing] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setIsOwnResult(window.localStorage.getItem(`own-result:${sessionId}`) === "1");
@@ -28,8 +31,58 @@ export function ResultCard({
 
   const shareUrl =
     typeof window !== "undefined" ? `${window.location.origin}/result/${sessionId}` : "";
-  const shareText = `I got "${result.type}" on the Taylor & Francis Research Integrity Challenge!`;
+  const shareText = `I got "${result.type}" on the Taylor & Francis Research Integrity Challenge! Take the quiz and see your own result:`;
   const whatsappText = shareText + " " + shareUrl;
+
+  const handleDownloadClick = () => {
+    fetch("/api/toolkit-download", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ visitorId: getOrCreateVisitorId(), resultSlug: result.slug }),
+    }).catch(() => {});
+    // Intentionally not preventing default: the browser's native download proceeds
+    // in parallel with this fire-and-forget analytics call.
+  };
+
+  const handleNativeShare = async () => {
+    if (sharing) return;
+    setSharing(true);
+    try {
+      const { toBlob } = await import("html-to-image");
+      const blob = shareCardRef.current ? await toBlob(shareCardRef.current, { pixelRatio: 2 }) : null;
+      const file = blob ? new File([blob], "research-integrity-result.png", { type: "image/png" }) : null;
+
+      if (file && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "Research Integrity Challenge",
+          text: shareText,
+          url: shareUrl,
+        });
+      } else if (navigator.share) {
+        await navigator.share({
+          title: "Research Integrity Challenge",
+          text: shareText,
+          url: shareUrl,
+        });
+      } else if (file) {
+        // Desktop fallback: download the snapshot image so it can be attached manually.
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(file);
+        link.download = file.name;
+        link.click();
+        await navigator.clipboard?.writeText(whatsappText);
+      } else {
+        await navigator.clipboard?.writeText(whatsappText);
+      }
+    } catch (err) {
+      if (err instanceof Error && err.name !== "AbortError") {
+        console.error("Share failed:", err);
+      }
+    } finally {
+      setSharing(false);
+    }
+  };
 
   const shareLinks = [
     {
@@ -107,17 +160,33 @@ export function ResultCard({
           <a
             href="/Research-integrity-A-toolkit-for-early-career-researchers.pdf"
             download
+            onClick={handleDownloadClick}
             className="w-full max-w-md py-3 border border-[#004bbf] text-[#004bbf] hover:bg-blue-50 active:scale-95 font-bold text-sm sm:text-base rounded-lg transition-all text-center flex items-center justify-center gap-2"
           >
             <Download className="w-4 h-4" />
             Download Research Integrity Toolkit (PDF)
           </a>
 
-          <div className="w-full max-w-md space-y-2 pt-2">
+          <div className="w-full max-w-md space-y-3 pt-2">
             <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
               Share your result
             </p>
-            <div className="flex items-center justify-center gap-3">
+
+            <button
+              type="button"
+              onClick={handleNativeShare}
+              disabled={sharing}
+              className="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-sm sm:text-base rounded-lg shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+            >
+              {sharing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Share2 className="w-4 h-4" />
+              )}
+              <span>{sharing ? "Preparing your card..." : "Share with image & text"}</span>
+            </button>
+
+            <div className="flex items-center justify-center gap-3 pt-1">
               {shareLinks.map((link) => {
                 const Icon = link.icon;
                 return (
@@ -142,6 +211,25 @@ export function ResultCard({
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Off-screen snapshot card used to generate the shareable image */}
+      <div
+        ref={shareCardRef}
+        className="fixed -left-[9999px] top-0 w-[400px] bg-white flex flex-col items-center text-center p-10 gap-6"
+      >
+        <img src="/tf-logo.jpg" alt="Taylor & Francis" className="h-14 w-auto object-contain" />
+        <div className="space-y-1">
+          <p className="text-sm text-slate-500">Your Integrity Personality</p>
+          <p className="text-3xl font-serif font-bold text-slate-900">{result.type}</p>
+        </div>
+        <div className="space-y-1">
+          <p className="text-sm text-slate-500">Research Integrity Score</p>
+          <p className="text-2xl font-bold text-slate-700">{finalScore * 2} / 50</p>
+        </div>
+        <p className="text-xs text-slate-400 pt-2">
+          Take the Research Integrity Challenge at taylorandfrancis.com
+        </p>
       </div>
     </div>
   );

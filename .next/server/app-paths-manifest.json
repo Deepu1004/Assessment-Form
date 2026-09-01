@@ -1,5 +1,12 @@
 {
-  "/api/assessment/route": "app/api/assessment/route.js",
+  "/api/admin/submission/[sessionId]/route": "app/api/admin/submission/[sessionId]/route.js",
+  "/api/admin/scoring/route": "app/api/admin/scoring/route.js",
+  "/api/admin/overview/route": "app/api/admin/overview/route.js",
+  "/api/admin/toolkit-downloads/route": "app/api/admin/toolkit-downloads/route.js",
+  "/api/admin/results/route": "app/api/admin/results/route.js",
   "/page": "app/page.js",
-  "/assessment/page": "app/assessment/page.js"
+  "/admin/page": "app/admin/page.js",
+  "/admin/results/page": "app/admin/results/page.js",
+  "/admin/scoring/page": "app/admin/scoring/page.js",
+  "/admin/login/page": "app/admin/login/page.js"
 }

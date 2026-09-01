@@ -89,3 +89,12 @@ model AssessmentResult {
   finalScore   Int
   createdAt    DateTime          @default(now())
 }
+
+// Standalone analytics log for the toolkit PDF download button.
+// Deliberately not linked to AssessmentSession so it never touches existing data.
+model ToolkitDownloadEvent {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  visitorId    String
+  resultSlug   String?
+  downloadedAt DateTime @default(now())
+}

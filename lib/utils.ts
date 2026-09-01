@@ -19,6 +19,20 @@ export function formatQuestionText(text: string): string {
   return text.replace(/^Theme\s*\d+:\s*(?:.*?[—\-]\s*)?/i, "").trim();
 }
 
+export function getOrCreateVisitorId(): string {
+  const STORAGE_KEY = "tf_visitor_id";
+  const existing = window.localStorage.getItem(STORAGE_KEY);
+  if (existing) return existing;
+
+  const generated =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : cryptoRandomString(24);
+
+  window.localStorage.setItem(STORAGE_KEY, generated);
+  return generated;
+}
+
 export function formatDateTimeIST(date: string | Date): string {
   return new Date(date).toLocaleString("en-IN", {
     timeZone: "Asia/Kolkata",

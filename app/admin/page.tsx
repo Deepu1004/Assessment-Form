@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { AdminOverviewDTO, AdminSubmissionDetailDTO } from "@/types/assessment";
+import { AdminOverviewDTO, AdminSubmissionDetailDTO, ToolkitDownloadAnalyticsDTO } from "@/types/assessment";
 import { formatDateTimeIST } from "@/lib/utils";
 import {
   Users,
@@ -15,6 +15,7 @@ import {
   BarChart3,
   Calculator,
   Download,
+  FileDown,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -22,6 +23,7 @@ export default function AdminDashboardOverviewPage() {
   const [overview, setOverview] = useState<AdminOverviewDTO | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [toolkitAnalytics, setToolkitAnalytics] = useState<ToolkitDownloadAnalyticsDTO | null>(null);
 
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [detailData, setDetailData] = useState<AdminSubmissionDetailDTO | null>(null);
@@ -42,8 +44,19 @@ export default function AdminDashboardOverviewPage() {
     }
   };
 
+  const fetchToolkitAnalytics = async () => {
+    try {
+      const res = await fetch("/api/admin/toolkit-downloads");
+      if (!res.ok) return;
+      setToolkitAnalytics(await res.json());
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchOverview();
+    fetchToolkitAnalytics();
   }, []);
 
   const handleOpenDetail = async (sessionId: string) => {
@@ -77,6 +90,18 @@ export default function AdminDashboardOverviewPage() {
     ? Math.max(...overview.distribution.map((d) => d.count), 1)
     : 1;
 
+  let toolkitSubtitle = "PDF download counter";
+  if (toolkitAnalytics) {
+    const visitorLabel = `${toolkitAnalytics.uniqueVisitors} unique visitor${
+      toolkitAnalytics.uniqueVisitors === 1 ? "" : "s"
+    }`;
+    const repeatLabel =
+      toolkitAnalytics.repeatVisitors > 0
+        ? ` · ${toolkitAnalytics.repeatVisitors} downloaded more than once`
+        : "";
+    toolkitSubtitle = visitorLabel + repeatLabel;
+  }
+
   return (
     <div className="flex-1 px-4 py-8 max-w-6xl mx-auto w-full space-y-8">
       {/* Top Header */}
@@ -92,7 +117,10 @@ export default function AdminDashboardOverviewPage() {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={fetchOverview}
+            onClick={() => {
+              fetchOverview();
+              fetchToolkitAnalytics();
+            }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900 text-sm font-semibold transition-colors shadow-sm"
           >
             <RefreshCw className="w-4 h-4 text-slate-500" />
@@ -122,7 +150,7 @@ export default function AdminDashboardOverviewPage() {
       ) : overview ? (
         <>
           {/* Key Metrics Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div className="glass-panel p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-white">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -169,6 +197,19 @@ export default function AdminDashboardOverviewPage() {
                 {[...overview.distribution].sort((a, b) => b.count - a.count)[0]?.name || "N/A"}
               </p>
               <p className="text-xs text-slate-500">Highest frequency archetype</p>
+            </div>
+
+            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-white">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Toolkit Downloads
+                </span>
+                <FileDown className="w-4 h-4 text-rose-500" />
+              </div>
+              <p className="text-3xl font-extrabold text-slate-900">
+                {toolkitAnalytics?.totalDownloads ?? 0}
+              </p>
+              <p className="text-xs text-slate-500">{toolkitSubtitle}</p>
             </div>
           </div>
 

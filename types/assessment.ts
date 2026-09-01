@@ -90,6 +90,18 @@ export interface AdminOverviewDTO {
   }>;
 }
 
+export interface ToolkitDownloadAnalyticsDTO {
+  totalDownloads: number;
+  uniqueVisitors: number;
+  repeatVisitors: number;
+  recentDownloads: Array<{
+    id: string;
+    visitorId: string;
+    resultSlug?: string | null;
+    downloadedAt: string;
+  }>;
+}
+
 export interface AdminSubmissionDetailDTO {
   sessionId: string;
   sessionToken: string;
