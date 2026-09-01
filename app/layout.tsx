@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Open_Sans, Aleo } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const openSans = Open_Sans({
@@ -38,6 +39,8 @@ export default function RootLayout({
 
         {/* Content container */}
         <div className="relative z-10 flex-1 flex flex-col">{children}</div>
+
+        <Analytics />
       </body>
     </html>
   );

@@ -11,7 +11,6 @@ import {
   ListOrdered,
   ShieldCheck,
 } from "lucide-react";
-import { Analytics } from "@vercel/analytics/next";
 
 export default function LandingPage() {
   return (
