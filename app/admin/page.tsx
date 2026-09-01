@@ -35,15 +35,18 @@ export default function AdminDashboardOverviewPage() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [detailData, setDetailData] = useState<AdminSubmissionDetailDTO | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 10;
 
-  const fetchOverview = async () => {
+  const fetchOverview = async (targetPage: number = page) => {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch("/api/admin/overview");
+      const res = await fetch(`/api/admin/overview?page=${targetPage}&pageSize=${PAGE_SIZE}`);
       if (!res.ok) throw new Error("Failed to load admin overview metrics.");
       const data = await res.json();
       setOverview(data);
+      setPage(data.page ?? targetPage);
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred.");
     } finally {
@@ -76,6 +79,11 @@ export default function AdminDashboardOverviewPage() {
     fetchToolkitAnalytics();
     fetchShareAnalytics();
   }, []);
+
+  const handlePageChange = (newPage: number) => {
+    if (!overview || newPage < 1 || newPage > overview.totalPages) return;
+    fetchOverview(newPage);
+  };
 
   const handleOpenDetail = async (sessionId: string) => {
     setSelectedSessionId(sessionId);
@@ -278,7 +286,7 @@ export default function AdminDashboardOverviewPage() {
                 Participant Submissions & Collected Data
               </h2>
               <span className="px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#004bbf] font-bold text-xs">
-                Primary Records
+                {overview.totalSubmissions} total
               </span>
             </div>
 
@@ -442,6 +450,30 @@ export default function AdminDashboardOverviewPage() {
                     })}
                   </tbody>
                 </table>
+              </div>
+            )}
+
+            {overview.totalPages > 1 && (
+              <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                <p className="text-xs text-slate-500">
+                  Page {overview.page} of {overview.totalPages} ({overview.totalSubmissions} total submissions)
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handlePageChange(overview.page - 1)}
+                    disabled={overview.page <= 1}
+                    className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => handlePageChange(overview.page + 1)}
+                    disabled={overview.page >= overview.totalPages}
+                    className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
             )}
           </div>

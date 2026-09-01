@@ -1,8 +1,16 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const pageParam = Number(req.nextUrl.searchParams.get("page") ?? "1");
+    const pageSizeParam = Number(req.nextUrl.searchParams.get("pageSize") ?? "10");
+    const page = Number.isFinite(pageParam) && pageParam > 0 ? Math.floor(pageParam) : 1;
+    const pageSize =
+      Number.isFinite(pageSizeParam) && pageSizeParam > 0
+        ? Math.min(Math.floor(pageSizeParam), 100)
+        : 10;
+
     const totalSubmissions = await prisma.assessmentSession.count({
       where: { status: "COMPLETED" },
     });
@@ -43,7 +51,8 @@ export async function GET() {
     const recentSessions = await prisma.assessmentSession.findMany({
       where: { status: "COMPLETED" },
       orderBy: { completedAt: "desc" },
-      take: 10,
+      skip: (page - 1) * pageSize,
+      take: pageSize,
       include: {
         result: {
           include: {
@@ -75,6 +84,9 @@ export async function GET() {
         maxScore,
         distribution,
         recentSubmissions,
+        page,
+        pageSize,
+        totalPages: Math.max(1, Math.ceil(totalSubmissions / pageSize)),
       },
       { status: 200 }
     );
@@ -88,6 +100,9 @@ export async function GET() {
         maxScore: 0,
         distribution: [],
         recentSubmissions: [],
+        page: 1,
+        pageSize: 10,
+        totalPages: 1,
         warning: "Database not connected or uninitialized. Set DATABASE_URL in environment variables."
       },
       { status: 200 }

@@ -1,8 +1,12 @@
 {
-  "/api/admin/login/route": "app/api/admin/login/route.js",
+  "/api/admin/overview/route": "app/api/admin/overview/route.js",
+  "/api/admin/share-clicks/route": "app/api/admin/share-clicks/route.js",
+  "/api/admin/toolkit-downloads/route": "app/api/admin/toolkit-downloads/route.js",
   "/assessment/page": "app/assessment/page.js",
   "/result/[sessionId]/page": "app/result/[sessionId]/page.js",
-  "/admin/builder/page": "app/admin/builder/page.js",
+  "/page": "app/page.js",
+  "/admin/questions/page": "app/admin/questions/page.js",
   "/admin/results/page": "app/admin/results/page.js",
-  "/admin/questions/page": "app/admin/questions/page.js"
+  "/admin/builder/page": "app/admin/builder/page.js",
+  "/admin/page": "app/admin/page.js"
 }

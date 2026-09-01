@@ -213,6 +213,13 @@ export function ResultCard({
               {isOwnResult ? "Retake Quiz" : "Try it yourself"}
             </Link>
           </div>
+
+          <p className="text-[11px] text-slate-400 italic leading-relaxed max-w-lg mx-auto px-4 pt-2">
+            Note: The challenge is designed as an educational and reflective engagement experience.
+            It does not diagnose, certify or assess an individual&apos;s research-integrity conduct.
+            The scenarios are hypothetical, the personality profiles are illustrative, and the
+            results should not be interpreted as a judgement of a participant&apos;s integrity.
+          </p>
         </div>
       </div>
     </div>

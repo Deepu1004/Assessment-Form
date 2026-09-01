@@ -88,6 +88,9 @@ export interface AdminOverviewDTO {
     resultSlug: string;
     finalScore: number;
   }>;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }
 
 export interface ToolkitDownloadAnalyticsDTO {
