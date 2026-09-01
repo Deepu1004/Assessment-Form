@@ -38,6 +38,7 @@ export default function AssessmentPage() {
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [stepError, setStepError] = useState<string | null>(null);
 
   // Fetch active assessment questions from API
   useEffect(() => {
@@ -70,8 +71,37 @@ export default function AssessmentPage() {
     ? selectedAnswers[currentQuestion.id]
     : undefined;
 
+  const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  const isDetailsStepValid =
+    fullName.trim().length > 0 &&
+    isValidEmail(email.trim()) &&
+    jobTitle.trim().length > 0 &&
+    organisationName.trim().length > 0 &&
+    researchArea.trim().length > 0;
+
+  const isCurrentStepComplete =
+    currentStep <= totalQuestions ? Boolean(currentSelectedOptionId) : !isDetailsStep || isDetailsStepValid;
+
+  const getDetailsStepError = () => {
+    const missing: string[] = [];
+    if (!fullName.trim()) missing.push("Full Name");
+    if (!jobTitle.trim()) missing.push("Job Title");
+    if (!organisationName.trim()) missing.push("Organisation Name");
+    if (!researchArea.trim()) missing.push("Research Area");
+
+    if (!email.trim()) {
+      missing.push("Email Address");
+    } else if (!isValidEmail(email.trim())) {
+      return "Please enter a valid email address.";
+    }
+
+    if (missing.length === 0) return null;
+    return `Please fill in all the required details before continuing: ${missing.join(", ")}.`;
+  };
+
   const handleSelectOption = (optionId: string) => {
     if (!currentQuestion) return;
+    setStepError(null);
     setSelectedAnswers((prev) => ({
       ...prev,
       [currentQuestion.id]: optionId,
@@ -80,14 +110,20 @@ export default function AssessmentPage() {
 
   const handleNext = () => {
     if (currentStep <= totalQuestions) {
-      if (!currentSelectedOptionId) return; // Prevent advancing without selecting an answer
-      setCurrentStep((prev) => prev + 1);
-    } else if (isDetailsStep) {
-      setCurrentStep((prev) => prev + 1);
+      if (!currentSelectedOptionId) {
+        setStepError("Please select an answer before continuing.");
+        return;
+      }
+    } else if (isDetailsStep && !isDetailsStepValid) {
+      setStepError(getDetailsStepError());
+      return;
     }
+    setStepError(null);
+    setCurrentStep((prev) => prev + 1);
   };
 
   const handleBack = () => {
+    setStepError(null);
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
     }
@@ -190,11 +226,19 @@ export default function AssessmentPage() {
 
         {/* Step 1 to N: Question Display */}
         {currentStep <= totalQuestions && currentQuestion && (
-          <QuestionCard
-            question={currentQuestion}
-            selectedOptionId={currentSelectedOptionId}
-            onSelectOption={handleSelectOption}
-          />
+          <div className="space-y-4">
+            <QuestionCard
+              question={currentQuestion}
+              selectedOptionId={currentSelectedOptionId}
+              onSelectOption={handleSelectOption}
+            />
+            {stepError && (
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{stepError}</span>
+              </div>
+            )}
+          </div>
         )}
 
         {/* Step N+1: Participant Details Form */}
@@ -215,12 +259,16 @@ export default function AssessmentPage() {
             <div className="space-y-3">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Full Name
+                  Full Name <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
+                  onChange={(e) => {
+                    setFullName(e.target.value);
+                    setStepError(null);
+                  }}
                   placeholder="e.g. Dr. Jane Doe"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
                 />
@@ -228,12 +276,16 @@ export default function AssessmentPage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Email Address
+                  Email Address <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="email"
+                  required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setStepError(null);
+                  }}
                   placeholder="e.g. jane.doe@university.edu"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
                 />
@@ -241,12 +293,16 @@ export default function AssessmentPage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Job Title
+                  Job Title <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={jobTitle}
-                  onChange={(e) => setJobTitle(e.target.value)}
+                  onChange={(e) => {
+                    setJobTitle(e.target.value);
+                    setStepError(null);
+                  }}
                   placeholder="e.g. Associate Professor"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
                 />
@@ -254,12 +310,16 @@ export default function AssessmentPage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Organisation Name
+                  Organisation Name <span className="text-rose-500">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={organisationName}
-                  onChange={(e) => setOrganisationName(e.target.value)}
+                  onChange={(e) => {
+                    setOrganisationName(e.target.value);
+                    setStepError(null);
+                  }}
                   placeholder="e.g. University of Oxford"
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
                 />
@@ -267,11 +327,15 @@ export default function AssessmentPage() {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Your Research Area (Choose One)
+                  Your Research Area (Choose One) <span className="text-rose-500">*</span>
                 </label>
                 <select
+                  required
                   value={researchArea}
-                  onChange={(e) => setResearchArea(e.target.value)}
+                  onChange={(e) => {
+                    setResearchArea(e.target.value);
+                    setStepError(null);
+                  }}
                   className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-[#004bbf]"
                 >
                   <option value="">-- Select Research Area --</option>
@@ -283,6 +347,13 @@ export default function AssessmentPage() {
                 </select>
               </div>
             </div>
+
+            {stepError && (
+              <div className="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{stepError}</span>
+              </div>
+            )}
           </div>
         )}
 
@@ -380,9 +451,10 @@ export default function AssessmentPage() {
             <button
               type="button"
               onClick={handleNext}
-              disabled={currentStep <= totalQuestions && !currentSelectedOptionId}
-              className={`w-full py-2.5 bg-[#004bbf] hover:bg-[#003993] active:scale-95 text-white font-bold text-sm rounded-md shadow-md transition-all text-center ${
-                currentStep <= totalQuestions && !currentSelectedOptionId ? "opacity-50 cursor-not-allowed" : ""
+              className={`w-full py-2.5 active:scale-95 font-bold text-sm rounded-md shadow-md transition-all text-center ${
+                isCurrentStepComplete
+                  ? "bg-[#004bbf] hover:bg-[#003993] text-white"
+                  : "bg-slate-200 hover:bg-slate-300 text-slate-500"
               }`}
             >
               OK

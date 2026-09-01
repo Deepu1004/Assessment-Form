@@ -1743,6 +1743,9 @@
         background-color: color-mix(in oklab, var(--color-slate-200) 60%, transparent);
       }
     }
+    .hover\:bg-slate-300:hover {
+      background-color: var(--color-slate-300);
+    }
     .hover\:bg-slate-800:hover {
       background-color: var(--color-slate-800);
     }

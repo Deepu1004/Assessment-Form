@@ -15,11 +15,26 @@ export const submitAssessmentSchema = z.object({
       required_error: "answers must be an array",
     })
     .min(1, "answers array cannot be empty"),
-  fullName: z.string().optional(),
-  email: z.string().email("Invalid email format").optional().or(z.literal("")),
-  jobTitle: z.string().optional(),
-  organisationName: z.string().optional(),
-  researchArea: z.string().optional(),
+  fullName: z
+    .string({ required_error: "Full name is required" })
+    .trim()
+    .min(1, "Full name is required"),
+  email: z
+    .string({ required_error: "Email address is required" })
+    .trim()
+    .email("A valid email address is required"),
+  jobTitle: z
+    .string({ required_error: "Job title is required" })
+    .trim()
+    .min(1, "Job title is required"),
+  organisationName: z
+    .string({ required_error: "Organisation name is required" })
+    .trim()
+    .min(1, "Organisation name is required"),
+  researchArea: z
+    .string({ required_error: "Research area is required" })
+    .trim()
+    .min(1, "Research area is required"),
 });
 
 export type SubmitAssessmentInput = z.infer<typeof submitAssessmentSchema>;

@@ -6,40 +6,25 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/admin/layout": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/layout.js"
+      "static/chunks/app/page.js"
     ],
-    "/admin/page": [
+    "/assessment/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/page.js"
+      "static/chunks/app/assessment/page.js"
     ],
-    "/api/admin/overview/route": [
+    "/api/assessment/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/overview/route.js"
+      "static/chunks/app/api/assessment/route.js"
     ],
-    "/api/admin/toolkit-downloads/route": [
+    "/api/assessment/submit/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/toolkit-downloads/route.js"
-    ],
-    "/api/admin/share-clicks/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/share-clicks/route.js"
-    ],
-    "/api/admin/export/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/admin/export/route.js"
-    ],
-    "/api/share-click/route": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/api/share-click/route.js"
+      "static/chunks/app/api/assessment/submit/route.js"
     ]
   }
 }

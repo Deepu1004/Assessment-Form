@@ -20,9 +20,21 @@ describe("Assessment API Validation & Database Persistence", () => {
       answers: [
         { questionId: "650000000000000000000001", answerOptionId: "650000000000000000000002" },
       ],
+      fullName: "Jane Doe",
+      email: "jane.doe@university.edu",
+      jobTitle: "Associate Professor",
+      organisationName: "University of Oxford",
+      researchArea: "General Medicine",
     };
     const validResult = submitAssessmentSchema.safeParse(validPayload);
     expect(validResult.success).toBe(true);
+
+    // Participant details are now mandatory, matching the assessment form's required fields.
+    const missingDetailsPayload = {
+      answers: validPayload.answers,
+    };
+    const missingDetailsResult = submitAssessmentSchema.safeParse(missingDetailsPayload);
+    expect(missingDetailsResult.success).toBe(false);
   });
 
   it("should maintain historical submission score immutability when option scores change", async () => {
