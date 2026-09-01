@@ -49,15 +49,18 @@ export function ResultCard({
     setSharing(true);
     try {
       const { toBlob } = await import("html-to-image");
-      const blob = shareCardRef.current ? await toBlob(shareCardRef.current, { pixelRatio: 2 }) : null;
+      const blob = shareCardRef.current
+        ? await toBlob(shareCardRef.current, { pixelRatio: 2, cacheBust: true })
+        : null;
       const file = blob ? new File([blob], "research-integrity-result.png", { type: "image/png" }) : null;
 
+      // Note: browsers reject navigator.share() calls that combine `files` with `url` —
+      // when sharing a file we fold the link into `text` instead.
       if (file && navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           files: [file],
           title: "Research Integrity Challenge",
-          text: shareText,
-          url: shareUrl,
+          text: whatsappText,
         });
       } else if (navigator.share) {
         await navigator.share({
@@ -161,10 +164,13 @@ export function ResultCard({
             href="/Research-integrity-A-toolkit-for-early-career-researchers.pdf"
             download
             onClick={handleDownloadClick}
-            className="w-full max-w-md py-3 border border-[#004bbf] text-[#004bbf] hover:bg-blue-50 active:scale-95 font-bold text-sm sm:text-base rounded-lg transition-all text-center flex items-center justify-center gap-2"
+            className="w-full max-w-md py-3 px-4 border border-[#004bbf] text-[#004bbf] hover:bg-blue-50 active:scale-95 font-bold text-sm sm:text-base rounded-lg transition-all text-center flex items-center justify-center gap-2 whitespace-nowrap"
           >
-            <Download className="w-4 h-4" />
-            Download Research Integrity Toolkit (PDF)
+            <Download className="w-4 h-4 shrink-0" />
+            <span className="truncate">
+              <span className="sm:hidden">Download Toolkit (PDF)</span>
+              <span className="hidden sm:inline">Download Research Integrity Toolkit (PDF)</span>
+            </span>
           </a>
 
           <div className="w-full max-w-md space-y-3 pt-2">
@@ -176,14 +182,23 @@ export function ResultCard({
               type="button"
               onClick={handleNativeShare}
               disabled={sharing}
-              className="w-full py-3 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-sm sm:text-base rounded-lg shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-60"
+              className="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-bold text-sm sm:text-base rounded-lg shadow-md transition-all flex items-center justify-center gap-2 disabled:opacity-60 whitespace-nowrap"
             >
               {sharing ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-4 h-4 shrink-0 animate-spin" />
               ) : (
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-4 h-4 shrink-0" />
               )}
-              <span>{sharing ? "Preparing your card..." : "Share with image & text"}</span>
+              <span className="truncate">
+                {sharing ? (
+                  "Preparing..."
+                ) : (
+                  <>
+                    <span className="sm:hidden">Share Result</span>
+                    <span className="hidden sm:inline">Share with image &amp; text</span>
+                  </>
+                )}
+              </span>
             </button>
 
             <div className="flex items-center justify-center gap-3 pt-1">

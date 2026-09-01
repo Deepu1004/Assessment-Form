@@ -1,1 +1,8 @@
-{}
+{
+  "components/ResultCard.tsx -> html-to-image": {
+    "id": "components/ResultCard.tsx -> html-to-image",
+    "files": [
+      "static/chunks/_app-pages-browser_node_modules_html-to-image_es_index_js.js"
+    ]
+  }
+}
