@@ -1,1 +1,8 @@
-{}
+{
+  "/api/admin/toolkit-downloads/route": "app/api/admin/toolkit-downloads/route.js",
+  "/api/admin/overview/route": "app/api/admin/overview/route.js",
+  "/api/share-click/route": "app/api/share-click/route.js",
+  "/api/admin/share-clicks/route": "app/api/admin/share-clicks/route.js",
+  "/api/admin/export/route": "app/api/admin/export/route.js",
+  "/admin/page": "app/admin/page.js"
+}

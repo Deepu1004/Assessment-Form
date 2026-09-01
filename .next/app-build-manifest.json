@@ -6,15 +6,40 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/result/[sessionId]/page": [
+    "/admin/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/result/[sessionId]/page.js"
+      "static/chunks/app/admin/layout.js"
     ],
-    "/result/[sessionId]/opengraph-image/route": [
+    "/admin/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/result/[sessionId]/opengraph-image/route.js"
+      "static/chunks/app/admin/page.js"
+    ],
+    "/api/admin/overview/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/admin/overview/route.js"
+    ],
+    "/api/admin/toolkit-downloads/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/admin/toolkit-downloads/route.js"
+    ],
+    "/api/admin/share-clicks/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/admin/share-clicks/route.js"
+    ],
+    "/api/admin/export/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/admin/export/route.js"
+    ],
+    "/api/share-click/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/share-click/route.js"
     ]
   }
 }

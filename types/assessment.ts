@@ -102,6 +102,20 @@ export interface ToolkitDownloadAnalyticsDTO {
   }>;
 }
 
+export interface ShareClickAnalyticsDTO {
+  totalClicks: number;
+  uniqueVisitors: number;
+  repeatVisitors: number;
+  byMethod: Array<{ method: string; count: number }>;
+  recentClicks: Array<{
+    id: string;
+    visitorId: string;
+    resultSlug?: string | null;
+    method: string;
+    clickedAt: string;
+  }>;
+}
+
 export interface AdminSubmissionDetailDTO {
   sessionId: string;
   sessionToken: string;

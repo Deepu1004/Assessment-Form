@@ -245,6 +245,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/api/admin/share-clicks/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/share-clicks">> = Specific
+  const handler = {} as typeof import("../../app/api/admin/share-clicks/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/api/admin/submission/[sessionId]/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/submission/[sessionId]">> = Specific
@@ -285,6 +294,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/assessment/submit">> = Specific
   const handler = {} as typeof import("../../app/api/assessment/submit/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/api/share-click/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/share-click">> = Specific
+  const handler = {} as typeof import("../../app/api/share-click/route.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check

@@ -98,3 +98,13 @@ model ToolkitDownloadEvent {
   resultSlug   String?
   downloadedAt DateTime @default(now())
 }
+
+// Standalone analytics log for the "share your result" button/links.
+// Deliberately not linked to AssessmentSession so it never touches existing data.
+model ShareClickEvent {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  visitorId  String
+  resultSlug String?
+  method     String
+  clickedAt  DateTime @default(now())
+}

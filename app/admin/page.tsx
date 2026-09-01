@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { AdminOverviewDTO, AdminSubmissionDetailDTO, ToolkitDownloadAnalyticsDTO } from "@/types/assessment";
+import {
+  AdminOverviewDTO,
+  AdminSubmissionDetailDTO,
+  ToolkitDownloadAnalyticsDTO,
+  ShareClickAnalyticsDTO,
+} from "@/types/assessment";
 import { formatDateTimeIST } from "@/lib/utils";
 import {
   Users,
@@ -16,6 +21,7 @@ import {
   Calculator,
   Download,
   FileDown,
+  Share2,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -24,6 +30,7 @@ export default function AdminDashboardOverviewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [toolkitAnalytics, setToolkitAnalytics] = useState<ToolkitDownloadAnalyticsDTO | null>(null);
+  const [shareAnalytics, setShareAnalytics] = useState<ShareClickAnalyticsDTO | null>(null);
 
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [detailData, setDetailData] = useState<AdminSubmissionDetailDTO | null>(null);
@@ -54,9 +61,20 @@ export default function AdminDashboardOverviewPage() {
     }
   };
 
+  const fetchShareAnalytics = async () => {
+    try {
+      const res = await fetch("/api/admin/share-clicks");
+      if (!res.ok) return;
+      setShareAnalytics(await res.json());
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     fetchOverview();
     fetchToolkitAnalytics();
+    fetchShareAnalytics();
   }, []);
 
   const handleOpenDetail = async (sessionId: string) => {
@@ -90,17 +108,21 @@ export default function AdminDashboardOverviewPage() {
     ? Math.max(...overview.distribution.map((d) => d.count), 1)
     : 1;
 
-  let toolkitSubtitle = "PDF download counter";
-  if (toolkitAnalytics) {
-    const visitorLabel = `${toolkitAnalytics.uniqueVisitors} unique visitor${
-      toolkitAnalytics.uniqueVisitors === 1 ? "" : "s"
+  const describeEngagement = (
+    analytics: { uniqueVisitors: number; repeatVisitors: number } | null,
+    repeatVerb: string
+  ) => {
+    if (!analytics) return "No activity yet";
+    const visitorLabel = `${analytics.uniqueVisitors} unique visitor${
+      analytics.uniqueVisitors === 1 ? "" : "s"
     }`;
     const repeatLabel =
-      toolkitAnalytics.repeatVisitors > 0
-        ? ` · ${toolkitAnalytics.repeatVisitors} downloaded more than once`
-        : "";
-    toolkitSubtitle = visitorLabel + repeatLabel;
-  }
+      analytics.repeatVisitors > 0 ? ` · ${analytics.repeatVisitors} ${repeatVerb} more than once` : "";
+    return visitorLabel + repeatLabel;
+  };
+
+  const toolkitSubtitle = describeEngagement(toolkitAnalytics, "downloaded");
+  const shareSubtitle = describeEngagement(shareAnalytics, "shared");
 
   return (
     <div className="flex-1 px-4 py-8 max-w-6xl mx-auto w-full space-y-8">
@@ -120,6 +142,7 @@ export default function AdminDashboardOverviewPage() {
             onClick={() => {
               fetchOverview();
               fetchToolkitAnalytics();
+              fetchShareAnalytics();
             }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900 text-sm font-semibold transition-colors shadow-sm"
           >
@@ -150,7 +173,7 @@ export default function AdminDashboardOverviewPage() {
       ) : overview ? (
         <>
           {/* Key Metrics Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="glass-panel p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-white">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
@@ -198,18 +221,52 @@ export default function AdminDashboardOverviewPage() {
               </p>
               <p className="text-xs text-slate-500">Highest frequency archetype</p>
             </div>
+          </div>
 
-            <div className="glass-panel p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-white">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                  Toolkit Downloads
-                </span>
-                <FileDown className="w-4 h-4 text-rose-500" />
+          {/* Downloads & Shares */}
+          <div className="glass-panel p-6 rounded-2xl space-y-4 bg-white border border-slate-200 shadow-sm">
+            <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <Share2 className="w-5 h-5 text-[#004bbf]" />
+              Downloads & Shares
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-slate-50">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Toolkit Downloads
+                  </span>
+                  <FileDown className="w-4 h-4 text-rose-500" />
+                </div>
+                <p className="text-3xl font-extrabold text-slate-900">
+                  {toolkitAnalytics?.totalDownloads ?? 0}
+                </p>
+                <p className="text-xs text-slate-500">{toolkitSubtitle}</p>
               </div>
-              <p className="text-3xl font-extrabold text-slate-900">
-                {toolkitAnalytics?.totalDownloads ?? 0}
-              </p>
-              <p className="text-xs text-slate-500">{toolkitSubtitle}</p>
+
+              <div className="p-5 rounded-2xl space-y-1.5 border border-slate-200 bg-slate-50">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Share Clicks
+                  </span>
+                  <Share2 className="w-4 h-4 text-violet-500" />
+                </div>
+                <p className="text-3xl font-extrabold text-slate-900">
+                  {shareAnalytics?.totalClicks ?? 0}
+                </p>
+                <p className="text-xs text-slate-500">{shareSubtitle}</p>
+                {shareAnalytics && shareAnalytics.byMethod.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {shareAnalytics.byMethod.map((m) => (
+                      <span
+                        key={m.method}
+                        className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[11px] font-semibold text-slate-600 capitalize"
+                      >
+                        {m.method}: {m.count}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
