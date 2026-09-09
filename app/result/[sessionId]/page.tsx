@@ -17,14 +17,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     .catch(() => null);
 
   const personaName = session?.result?.resultType.name;
-  const score = session?.finalScore ?? session?.result?.finalScore;
+  const finalScore = session?.finalScore ?? session?.result?.finalScore ?? 0;
+
+  const activeQuestions = await prisma.question
+    .findMany({ where: { active: true }, include: { options: { where: { active: true } } } })
+    .catch(() => []);
+  const maxPossibleScore = activeQuestions.reduce((acc, q) => {
+    return acc + Math.max(...q.options.map((o) => o.score), 0);
+  }, 0);
+  const displayScore = maxPossibleScore > 0 ? Math.round((finalScore / maxPossibleScore) * 100) : finalScore;
 
   const title = personaName
     ? `I'm a "${personaName}" — Research Integrity Challenge | Taylor & Francis`
     : "Research Integrity Challenge | Taylor & Francis";
 
   const description = personaName
-    ? `I scored ${score ?? "?"}/50 and got "${personaName}" on the Taylor & Francis Research Integrity Challenge. Take the quiz and see your own result!`
+    ? `I scored ${displayScore}/100 and got "${personaName}" on the Taylor & Francis Research Integrity Challenge. Take the quiz and see your own result!`
     : "Take the Research Integrity Challenge and discover your integrity personality profile.";
 
   return {

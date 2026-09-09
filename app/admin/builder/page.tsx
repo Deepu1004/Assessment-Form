@@ -12,8 +12,21 @@ import {
   AlertCircle,
   CheckCircle2,
   Hash,
+  Target,
+  TriangleAlert,
 } from "lucide-react";
 import Link from "next/link";
+
+interface ResultTypeRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  minimumScore: number;
+  maximumScore: number;
+  displayOrder: number;
+  active: boolean;
+}
 
 export default function AdminAssessmentBuilderPage() {
   const [questions, setQuestions] = useState<AdminQuestionDTO[]>([]);
@@ -21,6 +34,12 @@ export default function AdminAssessmentBuilderPage() {
   const [error, setError] = useState<string | null>(null);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
+  const [resultTypes, setResultTypes] = useState<ResultTypeRow[]>([]);
+  const [resultTypesLoading, setResultTypesLoading] = useState(true);
+  const [savingResultTypeId, setSavingResultTypeId] = useState<string | null>(null);
+  const [resultTypeError, setResultTypeError] = useState<string | null>(null);
+  const [resultTypeSuccess, setResultTypeSuccess] = useState<string | null>(null);
 
   const fetchQuestions = async () => {
     try {
@@ -37,9 +56,46 @@ export default function AdminAssessmentBuilderPage() {
     }
   };
 
+  const fetchResultTypes = async () => {
+    try {
+      setResultTypesLoading(true);
+      const res = await fetch("/api/admin/results");
+      if (!res.ok) throw new Error("Failed to fetch result types.");
+      const data = await res.json();
+      setResultTypes(data.results);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setResultTypesLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchQuestions();
+    fetchResultTypes();
   }, []);
+
+  // Derived: max possible score from active questions
+  const maxPossibleScore = questions.reduce((acc, q) => {
+    const maxOpt = Math.max(...q.options.map((o) => o.score), 0);
+    return acc + maxOpt;
+  }, 0);
+
+  const minPossibleScore = questions.reduce((acc, q) => {
+    const minOpt = Math.min(...q.options.map((o) => o.score), Infinity);
+    return acc + (Number.isFinite(minOpt) ? minOpt : 0);
+  }, 0);
+
+  // Check if ranges cover min..max
+  const activeRanges = resultTypes.filter((r) => r.active).sort((a, b) => a.minimumScore - b.minimumScore);
+  const lowestRangeMin = activeRanges[0]?.minimumScore ?? null;
+  const highestRangeMax = activeRanges.at(-1)?.maximumScore ?? null;
+  const rangesGap =
+    maxPossibleScore > 0 &&
+    (lowestRangeMin === null ||
+      highestRangeMax === null ||
+      minPossibleScore < lowestRangeMin ||
+      maxPossibleScore > highestRangeMax);
 
   const handleUpdateQuestionText = (id: string, text: string) => {
     setQuestions((prev) =>
@@ -71,14 +127,12 @@ export default function AdminAssessmentBuilderPage() {
       setSavingId(question.id);
       setError(null);
 
-      // 1. Update question prompt
       await fetch(`/api/admin/questions/${question.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ questionText: question.questionText }),
       });
 
-      // 2. Update options & scores
       await Promise.all(
         question.options.map((opt) =>
           fetch(`/api/admin/options/${opt.id}`, {
@@ -134,6 +188,36 @@ export default function AdminAssessmentBuilderPage() {
       await fetchQuestions();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error deleting question.");
+    }
+  };
+
+  const handleResultTypeChange = (id: string, field: "minimumScore" | "maximumScore", value: number) => {
+    setResultTypes((prev) =>
+      prev.map((rt) => (rt.id === id ? { ...rt, [field]: value } : rt))
+    );
+  };
+
+  const handleSaveResultType = async (rt: ResultTypeRow) => {
+    try {
+      setSavingResultTypeId(rt.id);
+      setResultTypeError(null);
+      const res = await fetch(`/api/admin/results/${rt.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          minimumScore: rt.minimumScore,
+          maximumScore: rt.maximumScore,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save result type.");
+      setResultTypeSuccess(`"${rt.name}" range updated.`);
+      setTimeout(() => setResultTypeSuccess(null), 3000);
+      await fetchResultTypes();
+    } catch (err) {
+      setResultTypeError(err instanceof Error ? err.message : "Failed to save result type.");
+    } finally {
+      setSavingResultTypeId(null);
     }
   };
 
@@ -194,6 +278,120 @@ export default function AdminAssessmentBuilderPage() {
         </div>
       )}
 
+      {/* Score Range Configuration */}
+      <div className="glass-panel p-6 sm:p-8 rounded-2xl border border-slate-200 bg-white space-y-5 shadow-sm">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <Target className="w-5 h-5 text-[#004bbf]" />
+            Score Range Configuration
+          </h2>
+          <div className="flex items-center gap-3 text-xs font-mono">
+            <span className="px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600">
+              {questions.length} questions active
+            </span>
+            <span className="px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-bold">
+              Score range: {minPossibleScore} – {maxPossibleScore} pts
+            </span>
+          </div>
+        </div>
+
+        {rangesGap && (
+          <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 text-amber-800 text-sm flex items-start gap-2.5">
+            <TriangleAlert className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold">Score range gap detected</p>
+              <p className="text-xs mt-0.5">
+                Questions can produce scores from <span className="font-mono font-bold">{minPossibleScore}</span> to{" "}
+                <span className="font-mono font-bold">{maxPossibleScore}</span>, but result type ranges only cover{" "}
+                <span className="font-mono font-bold">{lowestRangeMin ?? "?"}</span> to{" "}
+                <span className="font-mono font-bold">{highestRangeMax ?? "?"}</span>. Submissions with scores outside
+                this window will fail. Update the ranges below to cover the full score span.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {resultTypeError && (
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
+            <span>{resultTypeError}</span>
+          </div>
+        )}
+
+        {resultTypeSuccess && (
+          <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>{resultTypeSuccess}</span>
+          </div>
+        )}
+
+        {resultTypesLoading ? (
+          <div className="py-6 flex justify-center">
+            <Loader2 className="w-6 h-6 text-slate-400 animate-spin" />
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            <div className="grid grid-cols-[1fr_100px_100px_auto] gap-3 px-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">
+              <span>Result Type</span>
+              <span className="text-center">Min Score</span>
+              <span className="text-center">Max Score</span>
+              <span />
+            </div>
+            {resultTypes
+              .toSorted((a, b) => a.displayOrder - b.displayOrder)
+              .map((rt) => {
+                const coversShort =
+                  maxPossibleScore > 0 && rt.active && rt.maximumScore < maxPossibleScore;
+                return (
+                  <div
+                    key={rt.id}
+                    className={`grid grid-cols-[1fr_100px_100px_auto] gap-3 items-center p-3 rounded-xl border ${
+                      coversShort
+                        ? "bg-amber-50/60 border-amber-200"
+                        : "bg-slate-50 border-slate-200"
+                    }`}
+                  >
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">{rt.name}</p>
+                      <p className="text-[11px] text-slate-500 font-mono">{rt.slug}</p>
+                    </div>
+                    <input
+                      type="number"
+                      value={rt.minimumScore}
+                      onChange={(e) =>
+                        handleResultTypeChange(rt.id, "minimumScore", Number(e.target.value))
+                      }
+                      className="w-full px-2 py-1.5 rounded-lg bg-white border border-slate-300 text-emerald-700 font-mono font-bold text-center text-sm focus:outline-none focus:border-[#004bbf]"
+                    />
+                    <input
+                      type="number"
+                      value={rt.maximumScore}
+                      onChange={(e) =>
+                        handleResultTypeChange(rt.id, "maximumScore", Number(e.target.value))
+                      }
+                      className="w-full px-2 py-1.5 rounded-lg bg-white border border-slate-300 text-emerald-700 font-mono font-bold text-center text-sm focus:outline-none focus:border-[#004bbf]"
+                    />
+                    <button
+                      onClick={() => handleSaveResultType(rt)}
+                      disabled={savingResultTypeId === rt.id}
+                      className="px-3 py-1.5 rounded-xl bg-[#004bbf] hover:bg-[#003993] text-white font-bold text-xs flex items-center gap-1.5 transition-colors disabled:opacity-60"
+                    >
+                      {savingResultTypeId === rt.id ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <>
+                          <Save className="w-3.5 h-3.5" />
+                          Save
+                        </>
+                      )}
+                    </button>
+                  </div>
+                );
+              })}
+          </div>
+        )}
+      </div>
+
       {/* Visual Questions Builder List */}
       <div className="space-y-8">
         {questions.map((q, idx) => (
@@ -229,8 +427,9 @@ export default function AdminAssessmentBuilderPage() {
 
             {/* Prompt input */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-700">Question Prompt</label>
+              <label htmlFor={`q-${q.id}`} className="text-xs font-bold text-slate-700">Question Prompt</label>
               <textarea
+                id={`q-${q.id}`}
                 rows={2}
                 value={q.questionText}
                 onChange={(e) => handleUpdateQuestionText(q.id, e.target.value)}

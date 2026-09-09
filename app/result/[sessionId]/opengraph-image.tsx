@@ -25,6 +25,14 @@ export default async function OpengraphImage({
     ? getPersonalityByScore(finalScore).name
     : "Research Integrity Challenge";
 
+  const activeQuestions = await prisma.question
+    .findMany({ where: { active: true }, include: { options: { where: { active: true } } } })
+    .catch(() => []);
+  const maxPossibleScore = activeQuestions.reduce((acc, q) => {
+    return acc + Math.max(...q.options.map((o) => o.score), 0);
+  }, 0);
+  const displayScore = maxPossibleScore > 0 ? Math.round((finalScore / maxPossibleScore) * 100) : finalScore;
+
   return new ImageResponse(
     (
       <div
@@ -82,9 +90,9 @@ export default async function OpengraphImage({
             }}
           >
             <div style={{ fontSize: 48, fontWeight: 700, color: "#004bbf", display: "flex" }}>
-              {finalScore}
+              {displayScore}
             </div>
-            <div style={{ fontSize: 28, color: "#64748b", display: "flex" }}>/ 50 Score</div>
+            <div style={{ fontSize: 28, color: "#64748b", display: "flex" }}>/ 100 Score</div>
           </div>
         </div>
       </div>

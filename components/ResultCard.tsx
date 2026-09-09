@@ -20,8 +20,10 @@ interface ResultCardProps {
 export function ResultCard({
   result,
   finalScore,
+  maxPossibleScore,
   sessionId,
 }: ResultCardProps) {
+  const displayScore = maxPossibleScore > 0 ? Math.round((finalScore / maxPossibleScore) * 100) : finalScore;
   const personality = getPersonalityByScore(finalScore);
   const [isOwnResult, setIsOwnResult] = useState(false);
   const [sharing, setSharing] = useState(false);
@@ -33,7 +35,7 @@ export function ResultCard({
 
   const shareUrl =
     typeof window !== "undefined" ? `${window.location.origin}/result/${sessionId}` : "";
-  const shareText = `I got "${personality.name}" on the Taylor & Francis Research Integrity Challenge! Take the quiz and see your own result:`;
+  const shareText = `I scored ${displayScore}/100 and got "${personality.name}" on the Taylor & Francis Research Integrity Challenge! Take the quiz and see your own result:`;
   const whatsappText = shareText + " " + shareUrl;
 
   const logEngagement = (endpoint: string, extra: Record<string, string>) => {
@@ -138,7 +140,7 @@ export function ResultCard({
               Research Integrity Score
             </h2>
             <div className="text-xl sm:text-2xl font-bold text-slate-700 tracking-tight">
-              {finalScore} / 50
+              {displayScore} / 100
             </div>
           </div>
 
