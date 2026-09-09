@@ -22,6 +22,7 @@ import {
   Download,
   FileDown,
   Share2,
+  Trash2,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -37,6 +38,7 @@ export default function AdminDashboardOverviewPage() {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 10;
+  const [deletingAnonymous, setDeletingAnonymous] = useState(false);
 
   const fetchOverview = async (targetPage: number = page) => {
     try {
@@ -98,6 +100,22 @@ export default function AdminDashboardOverviewPage() {
       console.error(err);
     } finally {
       setLoadingDetail(false);
+    }
+  };
+
+  const handleDeleteAnonymous = async () => {
+    if (!confirm("This will permanently delete all submissions where no name was provided. This cannot be undone. Continue?")) return;
+    setDeletingAnonymous(true);
+    try {
+      const res = await fetch("/api/admin/sessions/anonymous", { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Delete failed.");
+      alert(`Deleted ${data.deleted} anonymous participant${data.deleted === 1 ? "" : "s"}.`);
+      fetchOverview(1);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Delete failed.");
+    } finally {
+      setDeletingAnonymous(false);
     }
   };
 
@@ -164,6 +182,18 @@ export default function AdminDashboardOverviewPage() {
             <Download className="w-4 h-4 text-slate-500" />
             Export to Excel
           </a>
+          <button
+            onClick={handleDeleteAnonymous}
+            disabled={deletingAnonymous}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-600 hover:text-white text-sm font-semibold transition-colors shadow-sm disabled:opacity-60"
+          >
+            {deletingAnonymous ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Trash2 className="w-4 h-4" />
+            )}
+            Delete Anonymous
+          </button>
           <Link
             href="/admin/builder"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#004bbf] hover:bg-[#003993] text-white text-sm font-bold shadow-md transition-all"

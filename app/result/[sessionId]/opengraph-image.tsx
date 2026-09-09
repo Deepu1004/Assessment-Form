@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { prisma } from "@/lib/prisma";
+import { getPersonalityByScore } from "@/lib/personalityTypes";
 
 export const alt = "Research Integrity Challenge Result";
 export const size = { width: 1200, height: 630 };
@@ -19,8 +20,10 @@ export default async function OpengraphImage({
     })
     .catch(() => null);
 
-  const personaName = session?.result?.resultType.name ?? "Research Integrity Challenge";
   const finalScore = session?.finalScore ?? session?.result?.finalScore ?? 0;
+  const personaName = session
+    ? getPersonalityByScore(finalScore).name
+    : "Research Integrity Challenge";
 
   return new ImageResponse(
     (
@@ -52,7 +55,7 @@ export default async function OpengraphImage({
             TAYLOR &amp; FRANCIS
           </div>
           <div style={{ fontSize: 24, color: "#64748b", marginTop: 24, display: "flex" }}>
-            Your Integrity Personality
+            Your RI Challenge Personality
           </div>
           <div
             style={{

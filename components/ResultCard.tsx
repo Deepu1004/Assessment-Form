@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Download, Facebook, Linkedin, Twitter, MessageCircle, Share2, Loader2, Check } from "lucide-react";
 import Link from "next/link";
 import { getOrCreateVisitorId } from "@/lib/utils";
+import { getPersonalityByScore } from "@/lib/personalityTypes";
 
 interface ResultCardProps {
   result: {
@@ -21,6 +22,7 @@ export function ResultCard({
   finalScore,
   sessionId,
 }: ResultCardProps) {
+  const personality = getPersonalityByScore(finalScore);
   const [isOwnResult, setIsOwnResult] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export function ResultCard({
 
   const shareUrl =
     typeof window !== "undefined" ? `${window.location.origin}/result/${sessionId}` : "";
-  const shareText = `I got "${result.type}" on the Taylor & Francis Research Integrity Challenge! Take the quiz and see your own result:`;
+  const shareText = `I got "${personality.name}" on the Taylor & Francis Research Integrity Challenge! Take the quiz and see your own result:`;
   const whatsappText = shareText + " " + shareUrl;
 
   const logEngagement = (endpoint: string, extra: Record<string, string>) => {
@@ -124,10 +126,10 @@ export function ResultCard({
         <div className="my-auto space-y-6 sm:space-y-8 py-4">
           <div className="space-y-2">
             <h1 className="text-base sm:text-xl font-normal text-slate-700">
-              Your Integrity Personality
+              Your RI Challenge Personality
             </h1>
             <div className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-slate-900 tracking-tight">
-              {result.type}
+              {personality.name}
             </div>
           </div>
 
@@ -141,7 +143,7 @@ export function ResultCard({
           </div>
 
           <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-lg mx-auto px-4">
-            Your responses reveal how you approach integrity when faced with real-world research dilemmas.
+            {personality.description}
           </p>
         </div>
 
