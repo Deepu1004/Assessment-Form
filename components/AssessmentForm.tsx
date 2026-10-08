@@ -16,7 +16,13 @@ const RESEARCH_AREAS = [
   "Social Sciences",
 ];
 
-export default function AssessmentForm({ children }: { children?: React.ReactNode }) {
+export default function AssessmentForm({
+  children,
+  disclaimer,
+}: {
+  children?: React.ReactNode;
+  disclaimer?: React.ReactNode;
+}) {
   const [questions, setQuestions] = useState<QuestionDTO[]>([]);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -117,28 +123,41 @@ export default function AssessmentForm({ children }: { children?: React.ReactNod
     }
   };
 
+  // Single continuous card: logo on top, then intro, then the form.
+  const shell = (body: React.ReactNode) => (
+    <div className="w-full max-w-2xl lg:max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 sm:p-10 lg:p-14 space-y-8">
+      <div className="text-center space-y-4">
+        <img
+          src="/tf-logo.jpg"
+          alt="Taylor & Francis by Informa"
+          className="h-12 sm:h-16 lg:h-20 w-auto object-contain mx-auto"
+        />
+        {children}
+      </div>
+      {body}
+    </div>
+  );
+
   if (loadingQuestions) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center space-y-4">
-        <Loader2 className="w-10 h-10 text-indigo-500 animate-spin" />
-        <p className="text-slate-400 font-medium animate-pulse">
-          Loading assessment questions from database...
-        </p>
+    return shell(
+      <div className="flex flex-col items-center justify-center space-y-4 py-12 border-t border-slate-200">
+        <Loader2 className="w-8 h-8 text-[#004bbf] animate-spin" />
+        <p className="text-slate-500 text-sm animate-pulse">Loading questions...</p>
       </div>
     );
   }
 
   if (loadError || questions.length === 0) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-md mx-auto space-y-4">
-        <div className="w-12 h-12 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center">
+    return shell(
+      <div className="flex flex-col items-center justify-center text-center space-y-4 py-12 border-t border-slate-200">
+        <div className="w-12 h-12 rounded-full bg-rose-50 text-rose-500 border border-rose-200 flex items-center justify-center">
           <AlertCircle className="w-6 h-6" />
         </div>
-        <h2 className="text-xl font-bold text-white">Assessment Error</h2>
-        <p className="text-slate-400 text-sm">{loadError || "No questions found."}</p>
+        <h2 className="text-lg font-bold text-slate-900">Assessment Error</h2>
+        <p className="text-slate-600 text-sm">{loadError || "No questions found."}</p>
         <button
           onClick={() => window.location.reload()}
-          className="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-500 transition-colors"
+          className="px-5 py-2.5 rounded-xl bg-[#004bbf] text-white font-semibold hover:bg-[#003993] transition-colors"
         >
           Try Reloading
         </button>
@@ -203,19 +222,8 @@ export default function AssessmentForm({ children }: { children?: React.ReactNod
     );
   }
 
-  return (
-    <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 p-6 sm:p-10 lg:p-12 space-y-8">
-
-      {/* Logo + intro (single header for the whole page) */}
-      <div className="text-center space-y-4">
-        <img
-          src="/tf-logo.jpg"
-          alt="Taylor & Francis by Informa"
-          className="h-12 sm:h-16 w-auto object-contain mx-auto"
-        />
-        {children}
-      </div>
-
+  return shell(
+    <>
       <div className="space-y-8">
         {/* Questions Section */}
         <div className="space-y-6 border-t border-slate-200 pt-8">
@@ -358,7 +366,7 @@ export default function AssessmentForm({ children }: { children?: React.ReactNod
       </div>
 
       {/* Submit Button */}
-      <div className="pt-4 border-t border-slate-100">
+      <div className="pt-4 border-t border-slate-100 space-y-3">
         <button
           type="button"
           onClick={handleSubmit}
@@ -388,7 +396,10 @@ export default function AssessmentForm({ children }: { children?: React.ReactNod
               : "Fill in all participant information fields"}
           </p>
         )}
+        {disclaimer && (
+          <p className="text-xs text-slate-500 italic text-center leading-normal">{disclaimer}</p>
+        )}
       </div>
-    </div>
+    </>
   );
 }

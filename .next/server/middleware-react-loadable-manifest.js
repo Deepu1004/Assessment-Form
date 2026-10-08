@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST="{\"app/page.tsx -> @/components/AssessmentForm\":{\"id\":\"app/page.tsx -> @/components/AssessmentForm\",\"files\":[\"static/chunks/_app-pages-browser_components_AssessmentForm_tsx.js\"]}}"
+self.__REACT_LOADABLE_MANIFEST="{}"
