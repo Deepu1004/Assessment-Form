@@ -245,6 +245,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/api/admin/sessions/anonymous/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/sessions/anonymous">> = Specific
+  const handler = {} as typeof import("../../app/api/admin/sessions/anonymous/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../app/api/admin/share-clicks/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/admin/share-clicks">> = Specific
