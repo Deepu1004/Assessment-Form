@@ -16,7 +16,7 @@ const RESEARCH_AREAS = [
   "Social Sciences",
 ];
 
-export default function AssessmentForm() {
+export default function AssessmentForm({ children }: { children?: React.ReactNode }) {
   const [questions, setQuestions] = useState<QuestionDTO[]>([]);
   const [loadingQuestions, setLoadingQuestions] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -206,27 +206,19 @@ export default function AssessmentForm() {
   return (
     <div className="w-full max-w-2xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 p-6 sm:p-10 lg:p-12 space-y-8">
 
-      {/* Header */}
-      <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
+      {/* Logo + intro (single header for the whole page) */}
+      <div className="text-center space-y-4">
         <img
           src="/tf-logo.jpg"
-          alt="Taylor & Francis"
-          className="h-8 sm:h-10 w-auto object-contain"
+          alt="Taylor & Francis by Informa"
+          className="h-12 sm:h-16 w-auto object-contain mx-auto"
         />
-        <span className="text-xs font-semibold text-slate-500 font-mono">
-          {Object.keys(selectedAnswers).length} of {questions.length + 1} sections complete
-        </span>
+        {children}
       </div>
 
-      {/* All Questions */}
       <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2">Research Integrity Assessment</h1>
-          <p className="text-slate-600 text-sm">Answer all questions below and provide your information, then submit.</p>
-        </div>
-
         {/* Questions Section */}
-        <div className="space-y-6 border-t border-slate-200 pt-6">
+        <div className="space-y-6 border-t border-slate-200 pt-8">
           {questions.map((question, idx) => (
             <div key={question.id} className="space-y-3">
               <div className="flex items-start gap-3">
