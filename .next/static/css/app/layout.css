@@ -859,6 +859,9 @@
   .max-w-2xl {
     max-width: var(--container-2xl);
   }
+  .max-w-3xl {
+    max-width: var(--container-3xl);
+  }
   .max-w-5xl {
     max-width: var(--container-5xl);
   }
@@ -1914,17 +1917,55 @@
     }
   }
   @media (width >= 64rem) {
+    .lg\:ml-0 {
+      margin-left: 0px;
+    }
+    .lg\:grid {
+      display: grid;
+    }
     .lg\:h-20 {
       height: calc(var(--spacing) * 20);
     }
     .lg\:max-w-2xl {
       max-width: var(--container-2xl);
     }
-    .lg\:max-w-3xl {
-      max-width: var(--container-3xl);
+    .lg\:max-w-none {
+      max-width: none;
+    }
+    .lg\:grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .lg\:grid-cols-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .lg\:gap-6 {
+      gap: calc(var(--spacing) * 6);
+    }
+    :where(.lg\:space-y-0 > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: 0;
+      margin-block-end: 0;
+    }
+    .lg\:rounded-xl {
+      border-radius: var(--radius-xl);
+    }
+    .lg\:border {
+      border-style: var(--tw-border-style);
+      border-width: 1px;
+    }
+    .lg\:border-slate-200 {
+      border-color: var(--color-slate-200);
+    }
+    .lg\:bg-slate-50\/50 {
+      background-color: color-mix(in srgb, oklch(98.4% 0.003 247.858) 50%, transparent);
+    }
+    @supports (color: color-mix(in lab, red, red)) {
+      .lg\:bg-slate-50\/50 {
+        background-color: color-mix(in oklab, var(--color-slate-50) 50%, transparent);
+      }
+    }
+    .lg\:p-5 {
+      padding: calc(var(--spacing) * 5);
     }
     .lg\:p-12 {
       padding: calc(var(--spacing) * 12);

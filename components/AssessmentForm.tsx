@@ -125,7 +125,7 @@ export default function AssessmentForm({
 
   // Single continuous card: logo on top, then intro, then the form.
   const shell = (body: React.ReactNode) => (
-    <div className="w-full max-w-2xl lg:max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 sm:p-10 lg:p-14 space-y-8">
+    <div className="w-full max-w-2xl lg:max-w-none mx-auto bg-white rounded-2xl shadow-2xl border border-slate-200 p-6 sm:p-10 lg:p-14 space-y-8">
       <div className="text-center space-y-4">
         <img
           src="/tf-logo.jpg"
@@ -226,9 +226,9 @@ export default function AssessmentForm({
     <>
       <div className="space-y-8">
         {/* Questions Section */}
-        <div className="space-y-6 border-t border-slate-200 pt-8">
+        <div className="space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6 border-t border-slate-200 pt-8">
           {questions.map((question, idx) => (
-            <div key={question.id} className="space-y-3">
+            <div key={question.id} className="space-y-3 lg:p-5 lg:rounded-xl lg:border lg:border-slate-200 lg:bg-slate-50/50">
               <div className="flex items-start gap-3">
                 <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-[#004bbf] text-white text-xs font-bold shrink-0 mt-0.5">
                   {idx + 1}
@@ -239,7 +239,7 @@ export default function AssessmentForm({
                   </p>
                 </div>
               </div>
-              <div className="ml-11 space-y-2">
+              <div className="ml-11 lg:ml-0 space-y-2">
                 {question.options.map((option) => (
                   <label
                     key={option.id}
@@ -268,7 +268,7 @@ export default function AssessmentForm({
         </div>
 
         {/* Participant Info Section */}
-        <div className="border-t border-slate-200 pt-6 space-y-4">
+        <div className="border-t border-slate-200 pt-6 space-y-4 max-w-2xl mx-auto w-full">
           <div>
             <span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-bold bg-blue-100 text-[#004bbf] mb-2">
               Participant Information
@@ -366,7 +366,7 @@ export default function AssessmentForm({
       </div>
 
       {/* Submit Button */}
-      <div className="pt-4 border-t border-slate-100 space-y-3">
+      <div className="pt-4 border-t border-slate-100 space-y-3 max-w-2xl mx-auto w-full">
         <button
           type="button"
           onClick={handleSubmit}

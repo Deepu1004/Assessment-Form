@@ -9,15 +9,16 @@ export default function LandingPage() {
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 leading-snug">
           Take this short Research Integrity Challenge
         </h1>
-        <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          Test how you would respond to common research scenarios involving AI,
-          data, authorship, peer review and responsible research practices.
+        <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
+          How would you respond to common research scenarios involving AI, data,
+          authorship, peer review and responsible research practices? Put your
+          knowledge to the test and discover how you would navigate these
+          real-world research integrity dilemmas.
         </p>
-        <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-          Put your research integrity knowledge to the test, discover your
-          score, and access the Taylor &amp; Francis Research Integrity Toolkit —
-          a collection of practical resources to help you navigate responsible
-          research with confidence.
+        <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
+          At the end, get your score and access the Taylor &amp; Francis Research
+          Integrity Toolkit — a collection of practical resources to help you
+          navigate responsible research with confidence.
         </p>
         <p className="text-slate-700 text-sm sm:text-base font-semibold">
           It takes just a few minutes to complete.
