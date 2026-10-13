@@ -7,7 +7,7 @@ export default function LandingPage() {
         disclaimer="By submitting this form, you agree to receive relevant communications from Taylor & Francis."
       >
         <h1 className="text-2xl sm:text-3xl font-bold text-slate-800 leading-snug">
-          Take this short Research Integrity Challenge
+          Take this Research Integrity Challenge
         </h1>
         <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-3xl mx-auto">
           How would you respond to common research scenarios involving AI, data,
