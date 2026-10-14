@@ -5,6 +5,7 @@ import { Download, Facebook, Linkedin, Twitter, MessageCircle, Share2, Loader2, 
 import Link from "next/link";
 import { getOrCreateVisitorId } from "@/lib/utils";
 import { getPersonalityByScore } from "@/lib/personalityTypes";
+import { scaleScore } from "@/lib/scoring";
 
 interface ResultCardProps {
   result: {
@@ -24,7 +25,7 @@ export function ResultCard({
   sessionId,
 }: ResultCardProps) {
   const displayScore = maxPossibleScore > 0 ? Math.round((finalScore / maxPossibleScore) * 100) : finalScore;
-  const personality = getPersonalityByScore(finalScore);
+  const personality = getPersonalityByScore(scaleScore(finalScore, maxPossibleScore));
   const [isOwnResult, setIsOwnResult] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [shareFeedback, setShareFeedback] = useState<string | null>(null);

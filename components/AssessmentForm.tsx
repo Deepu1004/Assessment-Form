@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { QuestionDTO, SubmissionAnswerInput } from "@/types/assessment";
-import { Loader2, Send, AlertCircle, Check, Zap } from "lucide-react";
+import { Loader2, Send, AlertCircle } from "lucide-react";
+import { ResultCard } from "@/components/ResultCard";
 import { formatQuestionText } from "@/lib/utils";
 
 const RESEARCH_AREAS = [
@@ -114,6 +115,10 @@ export default function AssessmentForm({
         throw new Error(data.error || "Submission failed. Please try again.");
       }
 
+      // Mark this session as taken on this device so the result card can
+      // distinguish the participant's own browser from a shared link.
+      window.localStorage.setItem(`own-result:${data.sessionId}`, "1");
+
       // Display result on the same page
       setResult(data);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -165,59 +170,16 @@ export default function AssessmentForm({
     );
   }
 
-  // If result is shown, display it
+  // Show the full result card (personality, score, toolkit download, sharing) on the same page.
   if (result) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 lg:p-12 min-h-screen">
-        <div className="w-full max-w-md sm:max-w-xl lg:max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden border border-slate-200 p-6 sm:p-10 lg:p-12 text-center space-y-6">
-          <div className="pb-4 border-b border-slate-100">
-            <img
-              src="/tf-logo.jpg"
-              alt="Taylor & Francis"
-              className="h-8 sm:h-10 w-auto object-contain mx-auto"
-            />
-          </div>
-
-          <div className="space-y-4">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-              <Check className="w-8 h-8" />
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Assessment Complete!</h1>
-            <p className="text-slate-600">Your Research Integrity profile has been calculated.</p>
-          </div>
-
-          <div className="space-y-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
-            <div className="text-center">
-              <p className="text-xs font-bold text-slate-600 uppercase">Your Result</p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#004bbf] mt-2">
-                {result.resultTypeName}
-              </h2>
-              <div className="flex items-center justify-center gap-2 mt-3">
-                <Zap className="w-5 h-5 text-amber-500" />
-                <span className="text-xl font-bold text-slate-900">{result.finalScore} pts</span>
-              </div>
-            </div>
-
-            {result.resultTypeDescription && (
-              <p className="text-sm text-slate-700 italic border-t border-blue-200 pt-4 mt-4">
-                {result.resultTypeDescription}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-2 text-sm text-slate-600">
-            <p><span className="font-semibold text-slate-900">Session ID:</span> {result.sessionId}</p>
-            {fullName && <p><span className="font-semibold text-slate-900">Name:</span> {fullName}</p>}
-            {email && <p><span className="font-semibold text-slate-900">Email:</span> {email}</p>}
-          </div>
-
-          <button
-            onClick={() => window.location.href = "/"}
-            className="w-full py-2.5 bg-[#004bbf] hover:bg-[#003993] text-white font-bold text-sm rounded-md shadow-md transition-all"
-          >
-            Back to Home
-          </button>
-        </div>
+      <div className="w-full flex justify-center">
+        <ResultCard
+          result={result.result}
+          finalScore={result.finalScore}
+          maxPossibleScore={result.maxPossibleScore}
+          sessionId={result.sessionId}
+        />
       </div>
     );
   }

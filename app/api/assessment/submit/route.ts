@@ -99,8 +99,14 @@ export async function POST(req: NextRequest) {
       orderBy: { displayOrder: "asc" },
     });
 
-    // 4. Calculate cumulative score & match range using server scoring engine
-    const scoreResult = calculateCumulativeScore(selectedOptionObjects, activeResultTypes);
+    // Max possible score, used to scale the raw total onto the result-range scale
+    const maxPossibleScore = activeQuestions.reduce((acc, q) => {
+      const maxOptScore = Math.max(...q.options.map((o) => o.score), 0);
+      return acc + maxOptScore;
+    }, 0);
+
+    // 4. Calculate cumulative score & match range (by ratio to the max) using server scoring engine
+    const scoreResult = calculateCumulativeScore(selectedOptionObjects, activeResultTypes, maxPossibleScore);
 
     // 5. Persist submission in DB (storing scoreAtSubmission for audit history)
     const sessionToken = cryptoRandomString(24);
@@ -145,12 +151,6 @@ export async function POST(req: NextRequest) {
 
       return newSession;
     });
-
-    // Calculate max possible score dynamically
-    const maxPossibleScore = activeQuestions.reduce((acc, q) => {
-      const maxOptScore = Math.max(...q.options.map((o) => o.score), 0);
-      return acc + maxOptScore;
-    }, 0);
 
     return NextResponse.json(
       {

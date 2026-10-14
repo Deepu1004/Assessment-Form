@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { AdminQuestionDTO } from "@/types/assessment";
+import { scaleScore, SCORE_SCALE } from "@/lib/scoring";
 import {
   Wrench,
   Plus,
@@ -94,8 +95,8 @@ export default function AdminAssessmentBuilderPage() {
     maxPossibleScore > 0 &&
     (lowestRangeMin === null ||
       highestRangeMax === null ||
-      minPossibleScore < lowestRangeMin ||
-      maxPossibleScore > highestRangeMax);
+      scaleScore(minPossibleScore, maxPossibleScore) < lowestRangeMin ||
+      SCORE_SCALE > highestRangeMax);
 
   const handleUpdateQuestionText = (id: string, text: string) => {
     setQuestions((prev) =>
@@ -301,8 +302,8 @@ export default function AdminAssessmentBuilderPage() {
             <div>
               <p className="font-bold">Score range gap detected</p>
               <p className="text-xs mt-0.5">
-                Questions can produce scores from <span className="font-mono font-bold">{minPossibleScore}</span> to{" "}
-                <span className="font-mono font-bold">{maxPossibleScore}</span>, but result type ranges only cover{" "}
+                Questions can produce scores from <span className="font-mono font-bold">{scaleScore(minPossibleScore, maxPossibleScore)}</span> to{" "}
+                <span className="font-mono font-bold">{SCORE_SCALE}</span> (scaled), but result type ranges only cover{" "}
                 <span className="font-mono font-bold">{lowestRangeMin ?? "?"}</span> to{" "}
                 <span className="font-mono font-bold">{highestRangeMax ?? "?"}</span>. Submissions with scores outside
                 this window will fail. Update the ranges below to cover the full score span.

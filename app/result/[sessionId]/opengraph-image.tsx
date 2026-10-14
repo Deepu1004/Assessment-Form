@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { prisma } from "@/lib/prisma";
 import { getPersonalityByScore } from "@/lib/personalityTypes";
+import { scaleScore } from "@/lib/scoring";
 
 export const alt = "Research Integrity Challenge Result";
 export const size = { width: 1200, height: 630 };
@@ -21,16 +22,16 @@ export default async function OpengraphImage({
     .catch(() => null);
 
   const finalScore = session?.finalScore ?? session?.result?.finalScore ?? 0;
-  const personaName = session
-    ? getPersonalityByScore(finalScore).name
-    : "Research Integrity Challenge";
-
   const activeQuestions = await prisma.question
     .findMany({ where: { active: true }, include: { options: { where: { active: true } } } })
     .catch(() => []);
   const maxPossibleScore = activeQuestions.reduce((acc, q) => {
     return acc + Math.max(...q.options.map((o) => o.score), 0);
   }, 0);
+  const personaName = session
+    ? getPersonalityByScore(scaleScore(finalScore, maxPossibleScore)).name
+    : "Research Integrity Challenge";
+
   const displayScore = maxPossibleScore > 0 ? Math.round((finalScore / maxPossibleScore) * 100) : finalScore;
 
   return new ImageResponse(

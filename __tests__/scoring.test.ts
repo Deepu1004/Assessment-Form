@@ -85,4 +85,15 @@ describe("Score Range Overlap Validation", () => {
     expect(validation.valid).toBe(true);
     expect(validation.error).toBeUndefined();
   });
+
+  it("scales the raw total by its ratio to the max possible score", () => {
+    const ranges: ResultTypeDB[] = [
+      { id: "1", name: "Low", slug: "low", description: "", minimumScore: 10, maximumScore: 29, displayOrder: 1, active: true },
+      { id: "2", name: "High", slug: "high", description: "", minimumScore: 30, maximumScore: 50, displayOrder: 2, active: true },
+    ];
+    // 60 of 60 -> 50 (top of the scale), 15 of 60 -> 13
+    expect(calculateCumulativeScore([{ score: 60 }], ranges, 60).resultType.slug).toBe("high");
+    expect(calculateCumulativeScore([{ score: 15 }], ranges, 60).resultType.slug).toBe("low");
+    expect(calculateCumulativeScore([{ score: 60 }], ranges, 60).finalScore).toBe(60);
+  });
 });
