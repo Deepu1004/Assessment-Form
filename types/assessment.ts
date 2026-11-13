@@ -95,11 +95,9 @@ export interface AdminOverviewDTO {
 
 export interface ToolkitDownloadAnalyticsDTO {
   totalDownloads: number;
-  /** Distinct completed responses that downloaded the toolkit (never exceeds total responses). */
+  /** Unique toolkit visitors, capped at total completed responses. */
   uniqueVisitors: number;
   repeatVisitors: number;
-  /** Downloads not tied to a response (older events, or opened from a shared result link). */
-  unlinkedDownloads: number;
   recentDownloads: Array<{
     id: string;
     visitorId: string;

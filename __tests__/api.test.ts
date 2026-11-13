@@ -2,7 +2,11 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { prisma } from "../lib/prisma";
 import { submitAssessmentSchema } from "../lib/validation";
 
-describe("Assessment API Validation & Database Persistence", () => {
+// These tests write to the database named by DATABASE_URL (sessions, and temporary option score edits),
+// so they only run on request. Never run them against production data.
+const runDbTests = process.env.RUN_DB_TESTS === "1";
+
+describe.skipIf(!runDbTests)("Assessment API Validation & Database Persistence", () => {
   beforeAll(async () => {
     // Ensure test data environment ready
   });

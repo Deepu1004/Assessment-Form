@@ -139,7 +139,7 @@ export default function AdminDashboardOverviewPage() {
     : 1;
 
   const describeEngagement = (
-    analytics: { uniqueVisitors: number; repeatVisitors: number; unlinkedDownloads?: number } | null,
+    analytics: { uniqueVisitors: number; repeatVisitors: number } | null,
     repeatVerb: string
   ) => {
     if (!analytics) return "No activity yet";
@@ -148,13 +148,10 @@ export default function AdminDashboardOverviewPage() {
     }`;
     const repeatLabel =
       analytics.repeatVisitors > 0 ? ` · ${analytics.repeatVisitors} ${repeatVerb} more than once` : "";
-    const unlinkedLabel = analytics.unlinkedDownloads
-      ? ` · ${analytics.unlinkedDownloads} not linked to a response`
-      : "";
-    return visitorLabel + repeatLabel + unlinkedLabel;
+    return visitorLabel + repeatLabel;
   };
 
-  const toolkitSubtitle = describeEngagement(toolkitAnalytics, "downloaded").replace(" unique visitor", " respondent");
+  const toolkitSubtitle = describeEngagement(toolkitAnalytics, "downloaded");
   const shareSubtitle = describeEngagement(shareAnalytics, "shared");
 
   return (
