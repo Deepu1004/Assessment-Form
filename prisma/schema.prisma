@@ -96,6 +96,8 @@ model ToolkitDownloadEvent {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   visitorId    String
   resultSlug   String?
+  // Completed response the download came from (set only for the participant's own result page).
+  sessionId    String?
   downloadedAt DateTime @default(now())
 }
 

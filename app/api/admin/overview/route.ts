@@ -11,18 +11,23 @@ export async function GET(req: NextRequest) {
         ? Math.min(Math.floor(pageSizeParam), 100)
         : 10;
 
-    const totalSubmissions = await prisma.assessmentSession.count({
-      where: { status: "COMPLETED" },
-    });
-
-    const resultTypes = await prisma.resultType.findMany({
-      orderBy: { displayOrder: "asc" },
-    });
-
-    const resultsGrouped = await prisma.assessmentResult.groupBy({
-      by: ["resultTypeId"],
-      _count: { id: true },
-    });
+    const [totalSubmissions, resultTypes, resultsGrouped, scoreAggregate, recentSessions] = await Promise.all([
+      prisma.assessmentSession.count({ where: { status: "COMPLETED" } }),
+      prisma.resultType.findMany({ orderBy: { displayOrder: "asc" } }),
+      prisma.assessmentResult.groupBy({ by: ["resultTypeId"], _count: { id: true } }),
+      prisma.assessmentResult.aggregate({
+        _avg: { finalScore: true },
+        _min: { finalScore: true },
+        _max: { finalScore: true },
+      }),
+      prisma.assessmentSession.findMany({
+        where: { status: "COMPLETED" },
+        orderBy: { completedAt: "desc" },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        include: { result: { include: { resultType: true } } },
+      }),
+    ]);
 
     const countMap = new Map<string, number>();
     for (const item of resultsGrouped) {
@@ -35,32 +40,12 @@ export async function GET(req: NextRequest) {
       count: countMap.get(rt.id) || 0,
     }));
 
-    // Calculate score analytics (Avg, Min, Max)
-    const scoreAggregate = await prisma.assessmentResult.aggregate({
-      _avg: { finalScore: true },
-      _min: { finalScore: true },
-      _max: { finalScore: true },
-    });
-
+    // Score analytics (Avg, Min, Max)
     const averageScore = scoreAggregate._avg.finalScore
       ? Math.round(scoreAggregate._avg.finalScore * 10) / 10
       : 0;
     const minScore = scoreAggregate._min.finalScore ?? 0;
     const maxScore = scoreAggregate._max.finalScore ?? 0;
-
-    const recentSessions = await prisma.assessmentSession.findMany({
-      where: { status: "COMPLETED" },
-      orderBy: { completedAt: "desc" },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-      include: {
-        result: {
-          include: {
-            resultType: true,
-          },
-        },
-      },
-    });
 
     const recentSubmissions = recentSessions.map((s) => ({
       id: s.id,

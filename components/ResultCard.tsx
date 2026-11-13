@@ -48,7 +48,8 @@ export function ResultCard({
   };
 
   const handleDownloadClick = () => {
-    logEngagement("/api/toolkit-download", {});
+    // Only the participant's own browser links the download to their response; shared-link visitors stay unlinked.
+    logEngagement("/api/toolkit-download", isOwnResult ? { sessionId } : {});
     // Intentionally not preventing default: the browser's native download proceeds
     // in parallel with this fire-and-forget analytics call.
   };

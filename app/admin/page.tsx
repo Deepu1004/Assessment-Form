@@ -37,12 +37,15 @@ export default function AdminDashboardOverviewPage() {
   const [detailData, setDetailData] = useState<AdminSubmissionDetailDTO | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [page, setPage] = useState(1);
+  const [paging, setPaging] = useState(false);
   const PAGE_SIZE = 10;
   const [deletingAnonymous, setDeletingAnonymous] = useState(false);
 
   const fetchOverview = async (targetPage: number = page) => {
     try {
-      setLoading(true);
+      // Full-page spinner only on first load; later fetches (paging/refresh) keep the page in place.
+      if (overview) setPaging(true);
+      else setLoading(true);
       setError(null);
       const res = await fetch(`/api/admin/overview?page=${targetPage}&pageSize=${PAGE_SIZE}`);
       if (!res.ok) throw new Error("Failed to load admin overview metrics.");
@@ -53,6 +56,7 @@ export default function AdminDashboardOverviewPage() {
       setError(err instanceof Error ? err.message : "An error occurred.");
     } finally {
       setLoading(false);
+      setPaging(false);
     }
   };
 
@@ -135,7 +139,7 @@ export default function AdminDashboardOverviewPage() {
     : 1;
 
   const describeEngagement = (
-    analytics: { uniqueVisitors: number; repeatVisitors: number } | null,
+    analytics: { uniqueVisitors: number; repeatVisitors: number; unlinkedDownloads?: number } | null,
     repeatVerb: string
   ) => {
     if (!analytics) return "No activity yet";
@@ -144,10 +148,13 @@ export default function AdminDashboardOverviewPage() {
     }`;
     const repeatLabel =
       analytics.repeatVisitors > 0 ? ` · ${analytics.repeatVisitors} ${repeatVerb} more than once` : "";
-    return visitorLabel + repeatLabel;
+    const unlinkedLabel = analytics.unlinkedDownloads
+      ? ` · ${analytics.unlinkedDownloads} not linked to a response`
+      : "";
+    return visitorLabel + repeatLabel + unlinkedLabel;
   };
 
-  const toolkitSubtitle = describeEngagement(toolkitAnalytics, "downloaded");
+  const toolkitSubtitle = describeEngagement(toolkitAnalytics, "downloaded").replace(" unique visitor", " respondent");
   const shareSubtitle = describeEngagement(shareAnalytics, "shared");
 
   return (
@@ -320,6 +327,7 @@ export default function AdminDashboardOverviewPage() {
               </span>
             </div>
 
+            <div className={`transition-opacity ${paging ? "opacity-50 pointer-events-none" : ""}`}>
             {overview.recentSubmissions.length === 0 ? (
               <p className="text-slate-500 text-sm text-center py-8">
                 No submissions recorded yet. Take the assessment to test persistence!
@@ -482,6 +490,7 @@ export default function AdminDashboardOverviewPage() {
                 </table>
               </div>
             )}
+            </div>
 
             {overview.totalPages > 1 && (
               <div className="flex items-center justify-between pt-2 border-t border-slate-100">
@@ -491,14 +500,14 @@ export default function AdminDashboardOverviewPage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => handlePageChange(overview.page - 1)}
-                    disabled={overview.page <= 1}
+                    disabled={overview.page <= 1 || paging}
                     className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     Previous
                   </button>
                   <button
                     onClick={() => handlePageChange(overview.page + 1)}
-                    disabled={overview.page >= overview.totalPages}
+                    disabled={overview.page >= overview.totalPages || paging}
                     className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     Next
